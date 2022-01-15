@@ -17,7 +17,7 @@ public class Lezione {
         this.codice = (int)System.currentTimeMillis(); //provvisorio
         this.data = data;
         this.durata = durata;
-        //new Date(2022-1900, Calendar.JANUARY, 4, 20,0,0); //anno-1900
+
     }
 
     public Date getData() {
@@ -30,6 +30,15 @@ public class Lezione {
 
     public int getCodice() {
         return codice;
+    }
+
+    public boolean nonDisponibile(Date data){
+        if(data.getDate() == data.getDate()
+                && data.getMonth() == data.getMonth()
+                && data.getYear() == data.getYear()){
+            return true;
+        }
+        return false;
     }
 
     @Override

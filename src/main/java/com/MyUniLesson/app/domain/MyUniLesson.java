@@ -11,7 +11,7 @@ public class MyUniLesson {
     //Vedere
     private CorsoDiLaurea cdlCorrente;
     private Insegnamento insCorrente;
-    private Lezione l;
+    private Lezione lezCorrente;
 
     //costruttore vedere, integrare avviamento
 
@@ -74,15 +74,15 @@ public class MyUniLesson {
     }
 
     public void creaLezione(Date data, int durata){
-        if(insCorrente.verificaDisponibilita(data)){
-            l = new Lezione(data, durata);
+        if(insCorrente.verificaDisponibilita(data)){ //non va, bisogna anche sistemare la chiamate delle funzionie nel caso non è disponibile
+            lezCorrente = new Lezione(data, durata);
 
         }
     }
 
     public void confermaInserimento(){
-        insCorrente.aggiungiLezione(l);
-        elencoLezioni.add(l);
+        insCorrente.aggiungiLezione(lezCorrente);
+        elencoLezioni.add(lezCorrente);
 
     }
 }

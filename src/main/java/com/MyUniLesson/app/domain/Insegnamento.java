@@ -15,20 +15,19 @@ public class Insegnamento {
         this.lezioniInsegnamento = new LinkedList<Lezione>();
     }
 
-    public boolean verificaDisponibilita(Date d){
+    public boolean verificaDisponibilita(Date data){
+        System.out.println("Data da confrontare: " + data);
     for(Lezione l : lezioniInsegnamento){
-        if(l.getData().getDate() == d.getDate()
-                && l.getData().getMonth() == d.getMonth()
-                && l.getData().getYear() == d.getYear()){
-            return false;
-        }
+        System.out.println("Lezione: " +l);
+
+        if(l.nonDisponibile(data)){ return false; }
     }
     return true;
 
     }
 
-    public void aggiungiLezione(Lezione l){
-        this.lezioniInsegnamento.add(l);
+    public void aggiungiLezione(Lezione lezCorrente){
+        this.lezioniInsegnamento.add(lezCorrente);
     }
 
     @Override
