@@ -1,19 +1,19 @@
 package com.MyUniLesson.app;
 
-
 import com.MyUniLesson.app.domain.MyUniLesson;
-
 import java.io.*;
 import java.util.Date;
 
 import static java.lang.System.in;
 
-/**
- * Hello world!
- *
- */
 public class App
 {
+
+    public static void main( String[] args )
+    {
+        MyUniLesson myUniLesson = MyUniLesson.getInstance();
+        Menu(myUniLesson);
+    }
 
     public static void Menu(MyUniLesson myUniLesson){
         BufferedReader tastiera = new BufferedReader(new InputStreamReader(System.in));
@@ -27,7 +27,9 @@ public class App
             }while (scelta > 1 || scelta < 0);
 
             switch (scelta){
-                case 0 : break; //esci
+                case 0 :
+                    System.out.println("Uscita");
+                    break; //esci
 
                 case 1 :
                     char concludi;
@@ -41,8 +43,9 @@ public class App
                     int codIns = Integer.parseInt(tastiera.readLine());
                     myUniLesson.selezionaInsegnamento(codIns);
                     do{
-                        System.out.println("Inserisci data e ora");
-                        Date d = new Date(Integer.parseInt(tastiera.readLine())-1900, Integer.parseInt(tastiera.readLine()),
+                        System.out.println("Inserisci data e ora (aaaa 'invio' mm 'invio' gg 'invio')");
+                        //Bisogna premere invio dopo l'inserimento di ciascun parametro
+                        Date d = new Date(Integer.parseInt(tastiera.readLine())-1900, Integer.parseInt(tastiera.readLine()) - 1,
                                 Integer.parseInt(tastiera.readLine()), Integer.parseInt(tastiera.readLine()), 0);
 
                         System.out.println("Inserisci durata");
@@ -57,28 +60,12 @@ public class App
 
                     }while(concludi != 's');
 
-                    myUniLesson.mostraCdl();
+                    System.out.println(myUniLesson.getElencoLezioni()); //inserito per confermare l'inserimento
 
                     break;
-
             }
-
         } catch (Exception e) {
             System.out.println(e);
         }
-
-    }
-
-    public static void main( String[] args )
-    {
-        MyUniLesson myUniLesson = MyUniLesson.getInstance();
-        Menu(myUniLesson);
-
-
-
-
-
-
-
     }
 }

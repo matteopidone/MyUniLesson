@@ -8,14 +8,11 @@ public class MyUniLesson {
     private Map<Integer, CorsoDiLaurea> elencoCdl;
     private List<Lezione> elencoLezioni;
 
-    //Vedere
     private CorsoDiLaurea cdlCorrente;
     private Insegnamento insCorrente;
     private Lezione lezCorrente;
 
-    //costruttore vedere, integrare avviamento
-
-    public MyUniLesson(){ //singleton
+    public MyUniLesson(){ //Singleton
         this.elencoLezioni = new LinkedList<Lezione>();
         this.elencoCdl = new HashMap<Integer, CorsoDiLaurea>();
         loadCdl();
@@ -24,7 +21,6 @@ public class MyUniLesson {
     public static MyUniLesson getInstance(){
         if(myUniLesson == null)
             myUniLesson = new MyUniLesson();
-
         return myUniLesson;
     }
 
@@ -54,35 +50,42 @@ public class MyUniLesson {
         }catch (Exception e) {
             System.err.println("errore: " + e);
         }
-        
     }
 
     public void mostraCdl(){
             System.out.println(elencoCdl);
-
     }
 
     public void mostraInsegnamenti(int codiceCdl){
      cdlCorrente = elencoCdl.get(codiceCdl);
      System.out.println(cdlCorrente.getInsegnamenti());
-
     }
 
     public void selezionaInsegnamento(int codiceInsegnamento){
         insCorrente = cdlCorrente.cercaInsegnamenti(codiceInsegnamento);
-
     }
 
     public void creaLezione(Date data, int durata){
-        if(insCorrente.verificaDisponibilita(data)){ //non va, bisogna anche sistemare la chiamate delle funzionie nel caso non è disponibile
+        if(insCorrente.verificaDisponibilita(data)){
             lezCorrente = new Lezione(data, durata);
-
+        } else {
+            lezCorrente = null;
+            System.out.println("Errore: lezione già presente nello stesso giorno");
         }
     }
 
     public void confermaInserimento(){
-        insCorrente.aggiungiLezione(lezCorrente);
-        elencoLezioni.add(lezCorrente);
+        if(lezCorrente != null) {
+            insCorrente.aggiungiLezione(lezCorrente);
+            elencoLezioni.add(lezCorrente);
+        } else {
+            System.out.println("Errore: lezione non inserita");
+        }
+    }
 
+    // Getters and Setters
+
+    public List<Lezione> getElencoLezioni() {
+        return elencoLezioni;
     }
 }

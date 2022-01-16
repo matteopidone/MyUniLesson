@@ -1,10 +1,11 @@
 package com.MyUniLesson.app.domain;
+
 import java.util.*;
 
 public class CorsoDiLaurea {
     private int codice;
     private String nome;
-    private Map<Integer, Insegnamento> elencoInsegnamenti; //scegliere se mettere string
+    private Map<Integer, Insegnamento> elencoInsegnamenti;
 
     public CorsoDiLaurea(int codice, String nome) {
         this.codice = codice;
@@ -20,7 +21,7 @@ public class CorsoDiLaurea {
         elencoInsegnamenti.put(codice, i);
     }
 
-    public Insegnamento cercaInsegnamenti(int codiceInsegnamento){  //era void nell'sd
+    public Insegnamento cercaInsegnamenti(int codiceInsegnamento){
         return elencoInsegnamenti.get(codiceInsegnamento);
     }
 
@@ -28,8 +29,7 @@ public class CorsoDiLaurea {
     public String toString() {
         return "CorsoDiLaurea{" +
                 "codice=" + codice +
-                ", nome='" + nome + '\'' +
-                ", elencoInsegnamenti=" + elencoInsegnamenti +
-                '}';
+                ", nome='" + nome +
+                "}";
     }
 }

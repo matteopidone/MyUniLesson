@@ -1,6 +1,6 @@
 package com.MyUniLesson.app.domain;
-import java.util.*;
 
+import java.util.*;
 
 public class Insegnamento {
     private int codice;
@@ -15,18 +15,14 @@ public class Insegnamento {
         this.lezioniInsegnamento = new LinkedList<Lezione>();
     }
 
-    public boolean verificaDisponibilita(Date data){
-        System.out.println("Data da confrontare: " + data);
-    for(Lezione l : lezioniInsegnamento){
-        System.out.println("Lezione: " +l);
-
-        if(l.nonDisponibile(data)){ return false; }
-    }
-    return true;
-
+    public boolean verificaDisponibilita(Date data) {
+        for(Lezione l : lezioniInsegnamento){
+           if(l.nonDisponibile(data)){ return false; }
+        }
+        return true;
     }
 
-    public void aggiungiLezione(Lezione lezCorrente){
+    public void aggiungiLezione(Lezione lezCorrente) {
         this.lezioniInsegnamento.add(lezCorrente);
     }
 
@@ -36,7 +32,6 @@ public class Insegnamento {
                 "codice=" + codice +
                 ", nome='" + nome + '\'' +
                 ", CFU=" + CFU +
-                ", lezioniInsegnamento=" + lezioniInsegnamento +
-                '}';
+                "}";
     }
 }

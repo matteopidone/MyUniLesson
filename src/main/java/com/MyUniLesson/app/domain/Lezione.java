@@ -1,6 +1,5 @@
 package com.MyUniLesson.app.domain;
 
-import java.util.Calendar;
 import java.util.Date;
 
 public class Lezione {
@@ -8,16 +7,10 @@ public class Lezione {
     private Date data;
     private int durata;
 
-
-    public Date creaData(int anno, int mese, int giorno, int ora, int minuti){
-        return new Date();
-    }
-
     public Lezione(Date data, int durata) {
-        this.codice = (int)System.currentTimeMillis(); //provvisorio
+        this.codice = (int)System.currentTimeMillis();
         this.data = data;
         this.durata = durata;
-
     }
 
     public Date getData() {
@@ -33,9 +26,9 @@ public class Lezione {
     }
 
     public boolean nonDisponibile(Date data){
-        if(data.getDate() == data.getDate()
-                && data.getMonth() == data.getMonth()
-                && data.getYear() == data.getYear()){
+        if(this.data.getDate() == data.getDate()
+                && this.data.getMonth() == data.getMonth()
+                && this.data.getYear() == data.getYear()){
             return true;
         }
         return false;
@@ -47,6 +40,6 @@ public class Lezione {
                 "codice=" + codice +
                 ", data=" + data +
                 ", durata=" + durata +
-                '}';
+                "}";
     }
 }
