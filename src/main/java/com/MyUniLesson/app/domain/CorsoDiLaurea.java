@@ -25,11 +25,20 @@ public class CorsoDiLaurea {
         return elencoInsegnamenti.get(codiceInsegnamento);
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return "CorsoDiLaurea{" +
                 "codice=" + codice +
                 ", nome='" + nome +
                 "}";
+    }*/
+
+    @Override
+    public String toString() {
+        return "CorsoDiLaurea{" +
+                "codice=" + codice +
+                ", nome='" + nome + '\'' +
+                ", elencoInsegnamenti=" + elencoInsegnamenti +
+                '}';
     }
 }

@@ -10,7 +10,8 @@ public class MyUniLesson {
 
     private CorsoDiLaurea cdlCorrente;
     private Insegnamento insCorrente;
-    private Lezione lezCorrente;
+    //private Lezione lezCorrente;
+    private LinkedList<Lezione> lezCorrente;
 
     public MyUniLesson(){ //Singleton
         this.elencoLezioni = new LinkedList<Lezione>();
@@ -65,19 +66,42 @@ public class MyUniLesson {
         insCorrente = cdlCorrente.cercaInsegnamenti(codiceInsegnamento);
     }
 
-    public void creaLezione(Date data, int durata){
-        if(insCorrente.verificaDisponibilita(data)){
-            lezCorrente = new Lezione(data, durata);
-        } else {
-            lezCorrente = null;
-            System.out.println("Errore: lezione già presente nello stesso giorno");
+    public void creaLezione(Date data, int durata, boolean ricorrenza){
+        lezCorrente = new LinkedList<Lezione>();
+        Date end;
+        if(data.getMonth() > 5 ) {
+            end = new Date(data.getYear(), Calendar.DECEMBER, 31);
+        }else {
+            end = new Date(data.getYear() , Calendar.JUNE, 30);
         }
+
+
+        do {
+            if (insCorrente.verificaDisponibilita(data)) {
+                //lezCorrente = new Lezione(data, durata);
+                System.out.println(new Lezione(data, durata));
+                lezCorrente.add(new Lezione(data, durata));
+            } else {
+                //lezCorrente = null;
+                System.out.println("Errore: Impossibile inserire la lezione di giorno " + data);
+            }
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(data);
+            calendar.add(Calendar.DATE, 7);
+            data = calendar.getTime();
+
+
+        }while(ricorrenza && data.before(end));
     }
 
     public void confermaInserimento(){
+
         if(lezCorrente != null) {
             insCorrente.aggiungiLezione(lezCorrente);
-            elencoLezioni.add(lezCorrente);
+            //elencoLezioni.add(lezCorrente);
+            elencoLezioni.addAll(lezCorrente);
+
         } else {
             System.out.println("Errore: lezione non inserita");
         }

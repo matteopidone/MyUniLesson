@@ -22,9 +22,18 @@ public class Insegnamento {
         return true;
     }
 
-    public void aggiungiLezione(Lezione lezCorrente) {
-        this.lezioniInsegnamento.add(lezCorrente);
+    public void aggiungiLezione(List lezCorrente) {
+        this.lezioniInsegnamento.addAll(lezCorrente);
     }
+
+    /*@Override
+    public String toString() {
+        return "Insegnamento{" +
+                "codice=" + codice +
+                ", nome='" + nome + '\'' +
+                ", CFU=" + CFU +
+                "}";
+    }*/
 
     @Override
     public String toString() {
@@ -32,6 +41,7 @@ public class Insegnamento {
                 "codice=" + codice +
                 ", nome='" + nome + '\'' +
                 ", CFU=" + CFU +
-                "}";
+                ", lezioniInsegnamento=" + lezioniInsegnamento +
+                '}';
     }
 }

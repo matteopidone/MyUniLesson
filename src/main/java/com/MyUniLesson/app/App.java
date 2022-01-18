@@ -51,8 +51,12 @@ public class App
                         System.out.println("Inserisci durata");
                         int durata = Integer.parseInt(tastiera.readLine());
 
-                        myUniLesson.creaLezione(d, durata);
+                        System.out.println("La lezione deve essere riccorrente? (true/false)");
+                        boolean ricorrenza =Boolean.parseBoolean(tastiera.readLine());
+
+                        myUniLesson.creaLezione(d, durata, ricorrenza);
                         myUniLesson.confermaInserimento();
+                        System.out.println("Lezioni inserite!");
 
                         System.out.println("Vuoi concludere? (s/n)");
                         concludi = tastiera.readLine().charAt(0);
@@ -60,8 +64,8 @@ public class App
 
                     }while(concludi != 's');
 
-                    System.out.println(myUniLesson.getElencoLezioni()); //inserito per confermare l'inserimento
-
+                    //System.out.println(myUniLesson.getElencoLezioni()); //inserito per confermare l'inserimento
+                    //myUniLesson.mostraCdl();
                     break;
             }
         } catch (Exception e) {

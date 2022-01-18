@@ -21,10 +21,10 @@ public class TestMyUniLesson
         myUniLesson.mostraInsegnamenti(1);
         myUniLesson.selezionaInsegnamento(1);
 
-        myUniLesson.creaLezione(new Date(2022-1900,1 - 1,1,10, 0), 2);
+        myUniLesson.creaLezione(new Date(2022-1900,1 - 1,1,10, 0), 2, false);
         myUniLesson.confermaInserimento();
 
-        myUniLesson.creaLezione(new Date(2022-1900,1 - 1,1,15, 0), 2);
+        myUniLesson.creaLezione(new Date(2022-1900,1 - 1,1,15, 0), 2, false );
         myUniLesson.confermaInserimento();
 
         System.out.println(myUniLesson.getElencoLezioni()); //Per la visualizzazione
