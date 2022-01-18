@@ -64,8 +64,8 @@ public class App
 
                     }while(concludi != 's');
 
-                    //System.out.println(myUniLesson.getElencoLezioni()); //inserito per confermare l'inserimento
-                    //myUniLesson.mostraCdl();
+                    System.out.println(myUniLesson.getElencoLezioni()); //inserito per confermare l'inserimento
+
                     break;
             }
         } catch (Exception e) {

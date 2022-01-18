@@ -26,22 +26,12 @@ public class Insegnamento {
         this.lezioniInsegnamento.addAll(lezCorrente);
     }
 
-    /*@Override
-    public String toString() {
-        return "Insegnamento{" +
-                "codice=" + codice +
-                ", nome='" + nome + '\'' +
-                ", CFU=" + CFU +
-                "}";
-    }*/
-
     @Override
     public String toString() {
         return "Insegnamento{" +
                 "codice=" + codice +
                 ", nome='" + nome + '\'' +
                 ", CFU=" + CFU +
-                ", lezioniInsegnamento=" + lezioniInsegnamento +
-                '}';
+                "}";
     }
 }
