@@ -10,6 +10,7 @@ public class MyUniLesson {
 
     private CorsoDiLaurea cdlSelezionato;
     private Insegnamento insSelezionato;
+    private Lezione lezioneSelezionata;
     private List<Lezione> lezCorrente;
 
     public MyUniLesson(){ //Singleton
@@ -30,6 +31,7 @@ public class MyUniLesson {
 
             BufferedReader bfCdl = new BufferedReader(new FileReader("CorsiDiLaurea.txt"));
             BufferedReader bfIns = new BufferedReader(new FileReader("Insegnamenti.txt"));
+            BufferedReader bfStud = new BufferedReader(new FileReader("Studenti.txt"));
 
             String[] strings;
             String str;
@@ -45,13 +47,23 @@ public class MyUniLesson {
                 CorsoDiLaurea cdl = mapCdl.get(Integer.parseInt(strings[0]));
                 cdl.inserisciInsegnamento(Integer.parseInt(strings[1]),new Insegnamento(Integer.parseInt(strings[1]), strings[2], Integer.parseInt(strings[3])));
             }
+
+            while((str = bfStud.readLine()) != null){
+                strings = str.split("-");
+                CorsoDiLaurea cdl = mapCdl.get(Integer.parseInt(strings[0]));
+                cdl.inserisciStudente(strings[1], new Studente(strings[1], strings[2], strings[3]));
+
+            }
             elencoCdl = mapCdl; //salvo tutti i corsi di laurea dentro in elencoCdl
+
+            System.out.println(elencoCdl);
 
         }catch (Exception e) {
             System.err.println("errore: " + e);
         }
     }
 
+    //UC1
     public void mostraCdl(){
             System.out.println(elencoCdl);
     }
@@ -96,6 +108,42 @@ public class MyUniLesson {
             System.out.println("Errore: lezione non inserita");
         }
     }
+
+    //UC2
+    public void identificaStudente(String matricola, int codiceCdl){
+        cdlSelezionato = elencoCdl.get(codiceCdl);
+        cdlSelezionato.cercaStudente(matricola);
+    }
+
+    public void mostraLezioniPrenotabili(){
+        System.out.println(cdlSelezionato.cercaLezioni());
+
+
+    }
+
+    public void creaPartecipazione(int codiceLezione){
+        for(Lezione l :elencoLezioni){
+            if(l.getCodice() == codiceLezione){
+                lezioneSelezionata = l;
+                break;
+            }
+        }
+        if(lezioneSelezionata!= null) {
+            lezioneSelezionata.generaPartecipazione(cdlSelezionato.getStudenteSelezionato());
+            System.out.println("Partecipazione creata! ");
+        }
+    }
+
+    public void confermaPartecipazione(){
+        String matricola = cdlSelezionato.getStudenteSelezionato().getMatricola();
+        lezioneSelezionata.aggiungiPartecipazione(matricola);
+        System.out.println(lezioneSelezionata);
+    }
+
+
+
+
+
 
     // Getters and Setters
 
