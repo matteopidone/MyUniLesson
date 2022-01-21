@@ -8,8 +8,8 @@ public class MyUniLesson {
     private Map<Integer, CorsoDiLaurea> elencoCdl;
     private List<Lezione> elencoLezioni;
 
-    private CorsoDiLaurea cdlCorrente;
-    private Insegnamento insCorrente;
+    private CorsoDiLaurea cdlSelezionato;
+    private Insegnamento insSelezionato;
     private List<Lezione> lezCorrente;
 
     public MyUniLesson(){ //Singleton
@@ -57,12 +57,12 @@ public class MyUniLesson {
     }
 
     public void mostraInsegnamenti(int codiceCdl){
-     cdlCorrente = elencoCdl.get(codiceCdl);
-     System.out.println(cdlCorrente.getInsegnamenti());
+        cdlSelezionato = elencoCdl.get(codiceCdl);
+        System.out.println(cdlSelezionato.getInsegnamenti());
     }
 
     public void selezionaInsegnamento(int codiceInsegnamento){
-        insCorrente = cdlCorrente.cercaInsegnamenti(codiceInsegnamento);
+        insSelezionato = cdlSelezionato.cercaInsegnamenti(codiceInsegnamento);
     }
 
     public void creaLezione(Date data, int durata, boolean ricorrenza){
@@ -75,7 +75,7 @@ public class MyUniLesson {
             end = new Date(data.getYear(), Calendar.JUNE, 30);
         }
         do {
-            if (insCorrente.verificaDisponibilita(data)) {
+            if (insSelezionato.verificaDisponibilita(data)) {
                 lezCorrente.add(new Lezione(data, durata));
             } else {
                 System.out.println("Errore: Impossibile inserire la lezione di giorno " + data);
@@ -90,7 +90,7 @@ public class MyUniLesson {
     public void confermaInserimento(){
 
         if(lezCorrente != null) {
-            insCorrente.aggiungiLezione(lezCorrente);
+            insSelezionato.aggiungiLezione(lezCorrente);
             elencoLezioni.addAll(lezCorrente);
         } else {
             System.out.println("Errore: lezione non inserita");
