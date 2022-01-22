@@ -13,21 +13,21 @@ public class MyUniLesson {
     private Lezione lezioneSelezionata;
     private List<Lezione> lezCorrente;
 
-    public MyUniLesson(){ //Singleton
+    public MyUniLesson() { //Singleton
         this.elencoLezioni = new LinkedList<Lezione>();
         this.elencoCdl = new HashMap<Integer, CorsoDiLaurea>();
         loadCdl();
     }
 
-    public static MyUniLesson getInstance(){
-        if(myUniLesson == null)
+    public static MyUniLesson getInstance() {
+        if (myUniLesson == null)
             myUniLesson = new MyUniLesson();
         return myUniLesson;
     }
 
-    public void loadCdl(){
+    public void loadCdl() {
 
-        try{
+        try {
 
             BufferedReader bfCdl = new BufferedReader(new FileReader("CorsiDiLaurea.txt"));
             BufferedReader bfIns = new BufferedReader(new FileReader("Insegnamenti.txt"));
@@ -37,18 +37,18 @@ public class MyUniLesson {
             String str;
             Map<Integer, CorsoDiLaurea> mapCdl = new HashMap<Integer, CorsoDiLaurea>();
 
-            while((str = bfCdl.readLine()) != null){
+            while ((str = bfCdl.readLine()) != null) {
                 strings = str.split("-");
-                mapCdl.put(Integer.parseInt(strings[0]),new CorsoDiLaurea(Integer.parseInt(strings[0]), strings[1]));
+                mapCdl.put(Integer.parseInt(strings[0]), new CorsoDiLaurea(Integer.parseInt(strings[0]), strings[1]));
             }
 
-            while((str = bfIns.readLine()) != null){
+            while ((str = bfIns.readLine()) != null) {
                 strings = str.split("-");
                 CorsoDiLaurea cdl = mapCdl.get(Integer.parseInt(strings[0]));
-                cdl.inserisciInsegnamento(Integer.parseInt(strings[1]),new Insegnamento(Integer.parseInt(strings[1]), strings[2], Integer.parseInt(strings[3])));
+                cdl.inserisciInsegnamento(Integer.parseInt(strings[1]), new Insegnamento(Integer.parseInt(strings[1]), strings[2], Integer.parseInt(strings[3])));
             }
 
-            while((str = bfStud.readLine()) != null){
+            while ((str = bfStud.readLine()) != null) {
                 strings = str.split("-");
                 CorsoDiLaurea cdl = mapCdl.get(Integer.parseInt(strings[0]));
                 cdl.inserisciStudente(strings[1], new Studente(strings[1], strings[2], strings[3]));
@@ -56,34 +56,37 @@ public class MyUniLesson {
             }
             elencoCdl = mapCdl; //salvo tutti i corsi di laurea dentro in elencoCdl
 
-            System.out.println(elencoCdl);
-
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.err.println("errore: " + e);
         }
     }
 
     //UC1
-    public void mostraCdl(){
-            System.out.println(elencoCdl);
+
+    public void mostraCdl() {
+        for (Map.Entry<Integer, CorsoDiLaurea> entry : elencoCdl.entrySet()) {
+            System.out.println(entry.getValue().getCodice() + " - " + entry.getValue().getNome());
+        }
     }
 
-    public void mostraInsegnamenti(int codiceCdl){
+    public void mostraInsegnamenti(int codiceCdl) {
         cdlSelezionato = elencoCdl.get(codiceCdl);
-        System.out.println(cdlSelezionato.getInsegnamenti());
+        for (Map.Entry<Integer, Insegnamento> entry : cdlSelezionato.getInsegnamenti().entrySet()) {
+            System.out.println(entry.getValue().getCodice() + " - " + entry.getValue().getNome() + " - CFU: " + entry.getValue().getCFU());
+        }
     }
 
-    public void selezionaInsegnamento(int codiceInsegnamento){
+    public void selezionaInsegnamento(int codiceInsegnamento) {
         insSelezionato = cdlSelezionato.cercaInsegnamenti(codiceInsegnamento);
     }
 
-    public void creaLezione(Date data, int durata, boolean ricorrenza){
+    public void creaLezione(Date data, int durata, boolean ricorrenza) {
         lezCorrente = new LinkedList<Lezione>();
         Date end;
 
-        if(data.getMonth() > 5 ) {
+        if (data.getMonth() > 5) {
             end = new Date(data.getYear(), Calendar.DECEMBER, 31);
-        }else {
+        } else {
             end = new Date(data.getYear(), Calendar.JUNE, 30);
         }
         do {
@@ -96,58 +99,72 @@ public class MyUniLesson {
             calendar.setTime(data);
             calendar.add(Calendar.DATE, 7);
             data = calendar.getTime();
-        }while(ricorrenza && data.before(end));
+        } while (ricorrenza && data.before(end));
     }
 
-    public void confermaInserimento(){
+    public void confermaInserimento() {
 
-        if(lezCorrente != null) {
+        if (lezCorrente != null) {
             insSelezionato.aggiungiLezione(lezCorrente);
             elencoLezioni.addAll(lezCorrente);
         } else {
             System.out.println("Errore: lezione non inserita");
         }
+        deseleziona();
     }
 
     //UC2
-    public void identificaStudente(String matricola, int codiceCdl){
+
+    public void identificaStudente(String matricola, int codiceCdl) {
         cdlSelezionato = elencoCdl.get(codiceCdl);
         cdlSelezionato.cercaStudente(matricola);
     }
 
-    public void mostraLezioniPrenotabili(){
-        System.out.println(cdlSelezionato.cercaLezioni());
-
-
+    public void mostraLezioniPrenotabili() {
+        //Non consideriamo lo scenario alternativo in cui non sono presenti lezioni prenotabili
+        for (Insegnamento i : cdlSelezionato.cercaLezioni()) {
+            System.out.println(i.getCodice() + " - " + i.getNome() + " - CFU: " + i.getCFU());
+            if (i.getLezioniInsegnamento().isEmpty()) {
+                System.out.println("Nessuna lezione prenotabile\n");
+            } else {
+                System.out.println(i.getLezioniInsegnamento() + "\n");
+            }
+        }
     }
 
-    public void creaPartecipazione(int codiceLezione){
-        for(Lezione l :elencoLezioni){
-            if(l.getCodice() == codiceLezione){
+    public void creaPartecipazione(int codiceLezione) {
+        for (Lezione l : elencoLezioni) {
+            if (l.getCodice() == codiceLezione) {
                 lezioneSelezionata = l;
                 break;
             }
         }
-        if(lezioneSelezionata!= null) {
+        if (lezioneSelezionata != null) {
             lezioneSelezionata.generaPartecipazione(cdlSelezionato.getStudenteSelezionato());
-            System.out.println("Partecipazione creata! ");
+            System.out.println("Partecipazione Creata ! ");
         }
     }
 
-    public void confermaPartecipazione(){
-        String matricola = cdlSelezionato.getStudenteSelezionato().getMatricola();
+    public void confermaPartecipazione() {
+        String matricola = cdlSelezionato.getMatricolaStudenteSelezionato();
         lezioneSelezionata.aggiungiPartecipazione(matricola);
-        System.out.println(lezioneSelezionata);
+        System.out.println("Partecipazione Confermata ! ");
+        deseleziona();
     }
-
-
-
-
 
 
     // Getters and Setters
 
     public List<Lezione> getElencoLezioni() {
         return elencoLezioni;
+    }
+
+    // Others
+
+    private void deseleziona() {
+        cdlSelezionato = null;
+        insSelezionato = null;
+        lezioneSelezionata = null;
+        lezCorrente = null;
     }
 }

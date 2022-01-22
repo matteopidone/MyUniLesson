@@ -17,32 +17,29 @@ public class CorsoDiLaurea {
         this.elencoStudenti = new HashMap<String, Studente>();
     }
 
-    public Map<Integer, Insegnamento> getInsegnamenti(){
-        return elencoInsegnamenti;
-    }
-
-    public void inserisciInsegnamento(int codice, Insegnamento i){
+    public void inserisciInsegnamento(int codice, Insegnamento i) {
         elencoInsegnamenti.put(codice, i);
     }
 
-    public void inserisciStudente(String matricola, Studente s){elencoStudenti.put(matricola, s); }
+    public void inserisciStudente(String matricola, Studente s) {
+        elencoStudenti.put(matricola, s);
+    }
 
-    public Insegnamento cercaInsegnamenti(int codiceInsegnamento){
+    public Insegnamento cercaInsegnamenti(int codiceInsegnamento) {
         return elencoInsegnamenti.get(codiceInsegnamento);
     }
 
-    public void cercaStudente(String matricola){
+    public void cercaStudente(String matricola) {
         studenteSelezionato = elencoStudenti.get(matricola);
-
     }
 
-    public List<Insegnamento> cercaLezioni(){
+    public List<Insegnamento> cercaLezioni() {
         List<Lezione> elencoLezioni;
         Insegnamento i;
         List<Insegnamento> insLezioni = new LinkedList<Insegnamento>();
         String matricola = studenteSelezionato.getMatricola();
 
-        for (Map.Entry<Integer, Insegnamento> entry : elencoInsegnamenti.entrySet()){
+        for (Map.Entry<Integer, Insegnamento> entry : elencoInsegnamenti.entrySet()) {
             elencoLezioni = entry.getValue().cercaLezioniPrenotabili(matricola);
             i = new Insegnamento(entry.getValue().getCodice(), entry.getValue().getNome(), entry.getValue().getCFU());
             i.aggiungiLezione(elencoLezioni);
@@ -52,8 +49,26 @@ public class CorsoDiLaurea {
         return insLezioni;
     }
 
+    //Getters and Setters
+
+    public int getCodice() {
+        return codice;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
     public Studente getStudenteSelezionato() {
         return studenteSelezionato;
+    }
+
+    public Map<Integer, Insegnamento> getInsegnamenti() {
+        return elencoInsegnamenti;
+    }
+
+    public String getMatricolaStudenteSelezionato() {
+        return studenteSelezionato.getMatricola();
     }
 
     @Override
@@ -64,6 +79,4 @@ public class CorsoDiLaurea {
                 ", elencoStudenti=" + elencoStudenti +
                 "}";
     }
-
-
 }

@@ -15,6 +15,31 @@ public class Insegnamento {
         this.lezioniInsegnamento = new LinkedList<Lezione>();
     }
 
+    public boolean verificaDisponibilita(Date data) {
+        for (Lezione l : lezioniInsegnamento) {
+            if (l.nonDisponibile(data)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void aggiungiLezione(List lezCorrente) {
+        this.lezioniInsegnamento.addAll(lezCorrente);
+    }
+
+    public List<Lezione> cercaLezioniPrenotabili(String matricola) {
+        List<Lezione> elencoLezioniPrenotabili = new LinkedList<Lezione>();
+        for (Lezione l : lezioniInsegnamento) {
+            if (!l.verificaPartecipazione(matricola)) {
+                elencoLezioniPrenotabili.add(l);
+            }
+        }
+        return elencoLezioniPrenotabili;
+    }
+
+    //Getters and Setters
+
     public int getCodice() {
         return codice;
     }
@@ -27,27 +52,9 @@ public class Insegnamento {
         return CFU;
     }
 
-    public boolean verificaDisponibilita(Date data) {
-        for(Lezione l : lezioniInsegnamento){
-           if(l.nonDisponibile(data)){ return false; }
-        }
-        return true;
+    public List<Lezione> getLezioniInsegnamento() {
+        return lezioniInsegnamento;
     }
-
-    public void aggiungiLezione(List lezCorrente) {
-        this.lezioniInsegnamento.addAll(lezCorrente);
-    }
-    public List<Lezione> cercaLezioniPrenotabili(String matricola){
-        List<Lezione> elencoLezioniPrenotabili = new LinkedList<Lezione>();
-        for(Lezione l: lezioniInsegnamento){
-            if(!l.verificaPartecipazione(matricola)){
-                elencoLezioniPrenotabili.add(l);
-            }
-        }
-
-        return elencoLezioniPrenotabili;
-    }
-
 
     @Override
     public String toString() {
