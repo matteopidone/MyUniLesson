@@ -19,6 +19,10 @@ public class MyUniLesson {
         loadCdl();
     }
 
+    public List<Lezione> getLezCorrente() {
+        return lezCorrente;
+    }
+
     public static MyUniLesson getInstance() {
         if (myUniLesson == null)
             myUniLesson = new MyUniLesson();
@@ -63,21 +67,22 @@ public class MyUniLesson {
 
     //UC1
 
-    public void mostraCdl() {
-        for (Map.Entry<Integer, CorsoDiLaurea> entry : elencoCdl.entrySet()) {
-            System.out.println(entry.getValue().getCodice() + " - " + entry.getValue().getNome());
-        }
+    public Map<Integer, CorsoDiLaurea> mostraCdl() {
+        return elencoCdl;
     }
 
-    public void mostraInsegnamenti(int codiceCdl) {
+    public Map<Integer, Insegnamento> mostraInsegnamenti(int codiceCdl) throws Exception {
         cdlSelezionato = elencoCdl.get(codiceCdl);
-        for (Map.Entry<Integer, Insegnamento> entry : cdlSelezionato.getInsegnamenti().entrySet()) {
-            System.out.println(entry.getValue().getCodice() + " - " + entry.getValue().getNome() + " - CFU: " + entry.getValue().getCFU());
+        if (cdlSelezionato == null) {
+            throw new Exception("Errore nel corso di laurea inserito");
+        } else {
+            return cdlSelezionato.getInsegnamenti();
         }
     }
 
-    public void selezionaInsegnamento(int codiceInsegnamento) {
+    public void selezionaInsegnamento(int codiceInsegnamento) throws Exception {
         insSelezionato = cdlSelezionato.cercaInsegnamenti(codiceInsegnamento);
+        if(insSelezionato == null) throw new Exception("Errore nell'insegnamento inserito");
     }
 
     public void creaLezione(Date data, int durata, boolean ricorrenza) {
@@ -102,42 +107,36 @@ public class MyUniLesson {
         } while (ricorrenza && data.before(end));
     }
 
-    public void confermaInserimento() {
+    public void confermaInserimento() throws Exception {
 
         if (lezCorrente != null) {
             insSelezionato.aggiungiLezione(lezCorrente);
             elencoLezioni.addAll(lezCorrente);
         } else {
-            System.out.println("Errore: lezione non inserita");
+            throw new Exception("Errore: lezione non inserita");
         }
         deseleziona();
     }
 
     //UC2
 
-    public void identificaStudente(String matricola, int codiceCdl) {
+    public boolean identificaStudente(String matricola, int codiceCdl) throws Exception {
         cdlSelezionato = elencoCdl.get(codiceCdl);
-        cdlSelezionato.cercaStudente(matricola);
+        return cdlSelezionato.cercaStudente(matricola);
     }
 
-    public void mostraLezioniPrenotabili() {
+    public List<Insegnamento> mostraLezioniPrenotabili() throws Exception {
         //Non consideriamo lo scenario alternativo in cui non sono presenti lezioni prenotabili
-        for (Insegnamento i : cdlSelezionato.cercaLezioni()) {
-            System.out.println(i.getCodice() + " - " + i.getNome() + " - CFU: " + i.getCFU());
-            if (i.getLezioniInsegnamento().isEmpty()) {
-                System.out.println("Nessuna lezione prenotabile\n");
-            } else {
-                System.out.println(i.getLezioniInsegnamento() + "\n");
-            }
-        }
+        return cdlSelezionato.cercaLezioni();
     }
 
-    public void creaPartecipazione(int codiceLezione) {
+    public void creaPartecipazione(int codiceLezione) throws Exception {
         for (Lezione l : elencoLezioni) {
             if (l.getCodice() == codiceLezione) {
                 lezioneSelezionata = l;
                 break;
             }
+
         }
         if (lezioneSelezionata != null) {
             lezioneSelezionata.generaPartecipazione(cdlSelezionato.getStudenteSelezionato());
@@ -145,7 +144,7 @@ public class MyUniLesson {
         }
     }
 
-    public void confermaPartecipazione() {
+    public void confermaPartecipazione() throws Exception {
         String matricola = cdlSelezionato.getMatricolaStudenteSelezionato();
         lezioneSelezionata.aggiungiPartecipazione(matricola);
         System.out.println("Partecipazione Confermata ! ");
@@ -161,7 +160,7 @@ public class MyUniLesson {
 
     // Others
 
-    private void deseleziona() {
+    public void deseleziona() {
         cdlSelezionato = null;
         insSelezionato = null;
         lezioneSelezionata = null;

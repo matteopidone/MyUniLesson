@@ -1,9 +1,11 @@
 package com.MyUniLesson.app;
 
+import com.MyUniLesson.app.domain.CorsoDiLaurea;
+import com.MyUniLesson.app.domain.Insegnamento;
 import com.MyUniLesson.app.domain.MyUniLesson;
 
 import java.io.*;
-import java.util.Date;
+import java.util.*;
 
 import static java.lang.System.in;
 
@@ -18,6 +20,9 @@ public class App {
         BufferedReader tastiera = new BufferedReader(new InputStreamReader(System.in));
         int scelta;
         int codCdl;
+        List<Insegnamento> insegnamentoList;
+        Map<Integer, CorsoDiLaurea> cdlMap;
+        Map<Integer, Insegnamento> insMap;
 
         try {
             do {
@@ -34,11 +39,17 @@ public class App {
                         break; //esci
                     case 1:
                         char continua;
-                        myUniLesson.mostraCdl();
+                        cdlMap = myUniLesson.mostraCdl();
+                        for (Map.Entry<Integer, CorsoDiLaurea> entry : cdlMap.entrySet()) {
+                            System.out.println(entry.getValue().getCodice() + " - " + entry.getValue().getNome());
+                        }
 
                         System.out.println("Inserisci il codice del CdL");
                         codCdl = Integer.parseInt(tastiera.readLine());
-                        myUniLesson.mostraInsegnamenti(codCdl);
+                        insMap = myUniLesson.mostraInsegnamenti(codCdl);
+                        for (Map.Entry<Integer, Insegnamento> entry : insMap.entrySet()) {
+                            System.out.println(entry.getValue().getCodice() + " - " + entry.getValue().getNome() + " - CFU: " + entry.getValue().getCFU());
+                        }
 
                         System.out.println("Inserisci il codice dell'insegnamento");
                         int codIns = Integer.parseInt(tastiera.readLine());
@@ -73,7 +84,15 @@ public class App {
                         System.out.println("Inserisci il codice del CdL");
                         codCdl = Integer.parseInt(tastiera.readLine());
                         myUniLesson.identificaStudente(matricola, codCdl);
-                        myUniLesson.mostraLezioniPrenotabili();
+                        insegnamentoList = myUniLesson.mostraLezioniPrenotabili();
+                        for (Insegnamento i : insegnamentoList) {
+                            System.out.println(i.getCodice() + " - " + i.getNome() + " - CFU: " + i.getCFU());
+                            if (i.getLezioniInsegnamento().isEmpty()) {
+                                System.out.println("Nessuna lezione prenotabile\n");
+                            } else {
+                                System.out.println(i.getLezioniInsegnamento() + "\n");
+                            }
+                        }
 
                         System.out.println("Inserisci il codice della Lezione da prenotare");
                         int codice = Integer.parseInt(tastiera.readLine());

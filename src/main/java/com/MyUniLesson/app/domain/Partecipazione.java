@@ -7,6 +7,10 @@ public class Partecipazione {
         this.studente = studente;
     }
 
+    public Studente getStudente() {
+        return studente;
+    }
+
     @Override
     public String toString() {
         return "Partecipazione{" +

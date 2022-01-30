@@ -19,6 +19,10 @@ public class Lezione {
         this.elencoPartecipazioni = new HashMap<String, Partecipazione>();
     }
 
+    public Partecipazione getpCorrente() {
+        return pCorrente;
+    }
+
     public Date getData() {
         return data;
     }
@@ -44,13 +48,20 @@ public class Lezione {
         return elencoPartecipazioni.get(matricola) != null;
     }
 
-    public void generaPartecipazione(Studente studenteSelezionato) {
+    public void generaPartecipazione(Studente studenteSelezionato) throws Exception {
         pCorrente = new Partecipazione(studenteSelezionato);
+        if (pCorrente == null) throw new Exception("Partecipazione non creata");
     }
 
-    public void aggiungiPartecipazione(String matricola) {
-        elencoPartecipazioni.put(matricola, pCorrente);
-        pCorrente = null; //rimangone le cose selezionate da deselezionare
+    public void aggiungiPartecipazione(String matricola) throws Exception {
+        if (pCorrente != null) {
+            if (elencoPartecipazioni.get(matricola) == null) {
+                elencoPartecipazioni.put(matricola, pCorrente);
+                pCorrente = null;
+            } else throw new Exception("Lo studente sta già partecipando alla lezione");
+        } else throw new Exception("Invocazione metodi non rispettata");
+        //if(elencoPartecipazioni.put(matricola, pCorrente) == null) throw new Exception("Impossibile aggiungere la partecipazione");
+        //pCorrente = null; //rimangone le cose selezionate da deselezionare
     }
 
     @Override

@@ -29,26 +29,37 @@ public class CorsoDiLaurea {
         return elencoInsegnamenti.get(codiceInsegnamento);
     }
 
-    public void cercaStudente(String matricola) {
+    public boolean cercaStudente(String matricola) throws Exception {
         studenteSelezionato = elencoStudenti.get(matricola);
+        if(studenteSelezionato != null){
+            return true;
+        } else{
+            throw new Exception("Studente non trovato");
+        }
     }
 
-    public List<Insegnamento> cercaLezioni() {
+    public List<Insegnamento> cercaLezioni() throws Exception {
         List<Lezione> elencoLezioni;
         Insegnamento i;
         List<Insegnamento> insLezioni = new LinkedList<Insegnamento>();
         String matricola = studenteSelezionato.getMatricola();
+        int count = 0;
 
         for (Map.Entry<Integer, Insegnamento> entry : elencoInsegnamenti.entrySet()) {
             elencoLezioni = entry.getValue().cercaLezioniPrenotabili(matricola);
             i = new Insegnamento(entry.getValue().getCodice(), entry.getValue().getNome(), entry.getValue().getCFU());
-            i.aggiungiLezione(elencoLezioni);
+            if(!elencoLezioni.isEmpty()) {
+                i.aggiungiLezione(elencoLezioni);
+                count++;
+            }
             insLezioni.add(i);
         }
-
-        return insLezioni;
+        if (count == 0) {
+            throw new Exception("Non ci sono lezioni prenotabili");
+        } else {
+            return insLezioni;
+        }
     }
-
     //Getters and Setters
 
     public int getCodice() {
