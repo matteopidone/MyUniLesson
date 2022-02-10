@@ -2,10 +2,12 @@ package com.MyUniLesson.app;
 
 import com.MyUniLesson.app.domain.CorsoDiLaurea;
 import com.MyUniLesson.app.domain.Studente;
+import com.MyUniLesson.app.exception.LezioneException;
+import com.MyUniLesson.app.exception.PartecipazioneException;
+import com.MyUniLesson.app.exception.StudenteException;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestCorsoDiLaurea {
 
@@ -21,8 +23,8 @@ public class TestCorsoDiLaurea {
             c1.cercaStudente(s2.getMatricola());
             fail("Unexpected fail");
             
-        }catch (Exception e){
-            assertEquals(e.getMessage(), "Studente non trovato");
+        }catch (StudenteException s){
+            assertNotNull(s);
         }
 
     }
@@ -38,8 +40,11 @@ public class TestCorsoDiLaurea {
             c1.cercaLezioni();
             fail("Error Test");
 
-        }catch (Exception e){
-            assertEquals(e.getMessage(), "Non ci sono lezioni prenotabili");
+        }catch (LezioneException l){
+            assertNotNull(l);
+        }
+        catch (StudenteException s){
+            fail("Error Test");
         }
     }
 

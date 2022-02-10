@@ -1,5 +1,7 @@
 package com.MyUniLesson.app.domain;
 
+import com.MyUniLesson.app.exception.LezioneException;
+
 import java.util.*;
 
 public class Insegnamento {
@@ -47,19 +49,37 @@ public class Insegnamento {
         return true;
     }
 
-    public List<Lezione> confermaLezioni() throws Exception {
+    public List<Lezione> confermaLezioni() throws LezioneException {
         if (lezCorrente != null) {
             aggiungiLezione(lezCorrente);
         } else {
-            throw new Exception("Errore: lezione non inserita");
+            throw new LezioneException("Errore: lezione non inserita");
         }
         return lezCorrente;
     }
 
+    private Date addDay(Date start, int amount){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(start);
+        calendar.add(Calendar.DATE, amount);
+        return calendar.getTime();
+    }
+
     public List<Lezione> cercaLezioniPrenotabili(String matricola) {
+        Date start = new Date();
+        Date end;
         List<Lezione> elencoLezioniPrenotabili = new LinkedList<Lezione>();
+
+        do{
+            start = addDay(start, 1);
+
+        }while(start.getDay() != 1);
+
+        end = addDay(start, 4);
+
+
         for (Lezione l : lezioniInsegnamento) {
-            if (!l.verificaPartecipazione(matricola)) {
+            if (!l.verificaPartecipazione(matricola) && l.getData().before(end) && l.getData().after(start)) {
                 elencoLezioniPrenotabili.add(l);
             }
         }
@@ -71,6 +91,8 @@ public class Insegnamento {
     public int getCodice() {
         return codice;
     }
+
+    public List<Lezione> getLezCorrente(){ return lezCorrente; }
 
     public String getNome() {
         return nome;

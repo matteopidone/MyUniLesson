@@ -1,5 +1,9 @@
 package com.MyUniLesson.app.domain;
 
+import com.MyUniLesson.app.exception.InsegnamentoException;
+import com.MyUniLesson.app.exception.LezioneException;
+import com.MyUniLesson.app.exception.StudenteException;
+
 import java.util.*;
 
 public class CorsoDiLaurea {
@@ -30,31 +34,30 @@ public class CorsoDiLaurea {
 
     // UC
 
-    public void cercaInsegnamenti(int codiceInsegnamento) throws Exception {
+    public void cercaInsegnamenti(int codiceInsegnamento) throws InsegnamentoException {
         insSelezionato = elencoInsegnamenti.get(codiceInsegnamento);
-        if (insSelezionato == null) throw new Exception("Errore nell'insegnamento inserito");
+        if (insSelezionato == null) throw new InsegnamentoException("Errore nell'insegnamento inserito");
 
-        //return elencoInsegnamenti.get(codiceInsegnamento);
     }
 
     public void creaLezione(Date data, int durata, boolean ricorrenza) {
         insSelezionato.creaLezione(data, durata, ricorrenza);
     }
 
-    public List<Lezione> confermaLezioni() throws Exception {
+    public List<Lezione> confermaLezioni() throws LezioneException {
         return insSelezionato.confermaLezioni();
     }
 
-    public boolean cercaStudente(String matricola) throws Exception {
+    public boolean cercaStudente(String matricola) throws StudenteException {
         studenteSelezionato = elencoStudenti.get(matricola);
         if (studenteSelezionato != null) {
             return true;
         } else {
-            throw new Exception("Studente non trovato");
+            throw new StudenteException("Studente non trovato");
         }
     }
 
-    public List<Insegnamento> cercaLezioni() throws Exception {
+    public List<Insegnamento> cercaLezioni() throws LezioneException {
         List<Lezione> elencoLezioni;
         Insegnamento i;
         List<Insegnamento> insLezioni = new LinkedList<Insegnamento>();
@@ -71,7 +74,7 @@ public class CorsoDiLaurea {
             insLezioni.add(i);
         }
         if (count == 0) {
-            throw new Exception("Non ci sono lezioni prenotabili");
+            throw new LezioneException("Non ci sono lezioni prenotabili");
         } else {
             return insLezioni;
         }
@@ -81,6 +84,9 @@ public class CorsoDiLaurea {
 
     public int getCodice() {
         return codice;
+    }
+    public List<Lezione> getLezCorrente(){
+        return insSelezionato.getLezCorrente();
     }
 
     public String getNome() {

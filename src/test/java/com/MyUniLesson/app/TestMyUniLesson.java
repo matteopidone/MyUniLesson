@@ -23,7 +23,7 @@ public class TestMyUniLesson {
     @AfterEach
     public void clearTest() {
 
-        myUniLesson.deseleziona();
+        //myUniLesson.deseleziona(); Matteo
     }
 
     //UC1 Test
@@ -105,13 +105,13 @@ public class TestMyUniLesson {
 
             myUniLesson.mostraInsegnamenti(1);
             myUniLesson.selezionaInsegnamento(1);
-            myUniLesson.creaLezione(new Date(2022-1900, 1-1, 28, 10, 00), 2, false);
+            myUniLesson.creaLezione(new Date(2022-1900, 2-1, 16, 10, 00), 2, false);
             Lezione lezione = myUniLesson.getLezCorrente().get(0);
             myUniLesson.confermaInserimento();
 
             myUniLesson.mostraInsegnamenti(1);
             myUniLesson.selezionaInsegnamento(1);
-            myUniLesson.creaLezione(new Date(2022-1900, 1-1, 27, 14,00), 2, false);
+            myUniLesson.creaLezione(new Date(2022-1900, 2-1, 17, 14,00), 2, false);
             myUniLesson.confermaInserimento();
 
             myUniLesson.identificaStudente("O46002170", 1);

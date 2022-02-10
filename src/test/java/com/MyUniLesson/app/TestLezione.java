@@ -3,6 +3,9 @@ package com.MyUniLesson.app;
 
 import com.MyUniLesson.app.domain.Lezione;
 import com.MyUniLesson.app.domain.Studente;
+import com.MyUniLesson.app.exception.MyUniLessonException;
+import com.MyUniLesson.app.exception.PartecipazioneException;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -21,8 +24,11 @@ public class TestLezione {
             Lezione l = new Lezione(d, 1);
             l.aggiungiPartecipazione("O46002170");
             fail("Error test");
-        }catch (Exception e){
-            assertEquals(e.getMessage(),"Invocazione metodi non rispettata");
+        }catch (MyUniLessonException m){
+            assertNotNull(m);
+        }
+        catch (Exception e){
+            fail("Error Test");
         }
     }
 
@@ -38,8 +44,12 @@ public class TestLezione {
             l.generaPartecipazione(s);
             l.aggiungiPartecipazione(s.getMatricola());
             fail("Error test");
-        }catch (Exception e){
-            assertEquals(e.getMessage(),"Lo studente sta già partecipando alla lezione");
+        }catch (PartecipazioneException p){
+            assertNotNull(p);
+        }
+        catch (Exception e){
+            fail("Error Test");
+
         }
     }
 

@@ -14,26 +14,31 @@ public class App {
 
     public static void Menu(MyUniLesson myUniLesson) {
         BufferedReader tastiera = new BufferedReader(new InputStreamReader(System.in));
-        int scelta;
+        int scelta = 0;
         int codCdl;
         List<Insegnamento> insegnamentoList;
         Map<Integer, CorsoDiLaurea> cdlMap;
         Map<Integer, Insegnamento> insMap;
 
-        try {
-            do {
-                System.out.println("Benvenuto:\n" +
-                        "Seleziona l'operazione:\n" +
-                        "1. Inserisci Lezione\n" +
-                        "2. Inserisci Partecipazione dello studente\n" +
-                        "0. Esci");
-                scelta = Integer.parseInt(tastiera.readLine());
 
-                switch (scelta) {
-                    case 0:
-                        System.out.println("Uscita");
-                        break; //esci
-                    case 1:
+        do {
+            System.out.println("Benvenuto:\n" +
+                    "Seleziona l'operazione:\n" +
+                    "1. Inserisci Lezione\n" +
+                    "2. Inserisci Partecipazione dello studente\n" +
+                    "0. Esci");
+            try {
+                scelta = Integer.parseInt(tastiera.readLine());
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
+            switch (scelta) {
+                case 0:
+                    System.out.println("Uscita");
+                    break; //esci
+                case 1:
+                    try {
                         char continua;
                         cdlMap = myUniLesson.mostraCdl();
                         for (Map.Entry<Integer, CorsoDiLaurea> entry : cdlMap.entrySet()) {
@@ -72,9 +77,14 @@ public class App {
                         } while (continua == 's');
 
                         System.out.println(myUniLesson.getElencoLezioni()); //inserito per confermare l'inserimento
-
+                    } catch (Exception e) {
+                        System.out.println("ERRORE: " + e.getMessage());
+                    } finally {
                         break;
-                    case 2:
+                    }
+
+                case 2:
+                    try {
                         System.out.println("Inserisci la matricola dello studente");
                         String matricola = tastiera.readLine();
                         System.out.println("Inserisci il codice del CdL");
@@ -94,16 +104,18 @@ public class App {
                         int codice = Integer.parseInt(tastiera.readLine());
                         myUniLesson.creaPartecipazione(codice);
                         myUniLesson.confermaPartecipazione();
-
+                    } catch (Exception e) {
+                        System.out.println("ERRORE: " + e.getMessage());
+                    } finally {
                         break;
-                    default:
-                        System.out.println("Scelta non valida");
-                        break;
-                }
-            } while (scelta != 0);
+                    }
 
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+                default:
+                    System.out.println("Scelta non valida");
+                    break;
+            }
+        } while (scelta != 0);
+
+
     }
 }

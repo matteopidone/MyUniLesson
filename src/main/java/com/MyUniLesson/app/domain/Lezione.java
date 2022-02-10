@@ -1,5 +1,9 @@
 package com.MyUniLesson.app.domain;
 
+import com.MyUniLesson.app.exception.MyUniLessonException;
+import com.MyUniLesson.app.exception.PartecipazioneException;
+
+
 import java.util.*;
 
 public class Lezione {
@@ -29,9 +33,9 @@ public class Lezione {
         return elencoPartecipazioni.get(matricola) != null;
     }
 
-    public void generaPartecipazione(Studente studenteSelezionato) throws Exception {
+    public void generaPartecipazione(Studente studenteSelezionato) throws PartecipazioneException {
         pCorrente = new Partecipazione(studenteSelezionato);
-        if (pCorrente == null) throw new Exception("Partecipazione non creata");
+        if (pCorrente == null) throw new PartecipazioneException("Partecipazione non creata");
     }
 
     public void aggiungiPartecipazione(String matricola) throws Exception {
@@ -39,10 +43,9 @@ public class Lezione {
             if (elencoPartecipazioni.get(matricola) == null) {
                 elencoPartecipazioni.put(matricola, pCorrente);
                 pCorrente = null;
-            } else throw new Exception("Lo studente sta già partecipando alla lezione");
-        } else throw new Exception("Invocazione metodi non rispettata");
-        //if(elencoPartecipazioni.put(matricola, pCorrente) == null) throw new Exception("Impossibile aggiungere la partecipazione");
-        //pCorrente = null; //rimangone le cose selezionate da deselezionare
+            } else throw new PartecipazioneException("Lo studente sta già partecipando alla lezione");
+        } else throw new MyUniLessonException("Invocazione metodi non rispettata");
+
     }
 
     //Getters and Setters

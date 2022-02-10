@@ -1,5 +1,7 @@
 package com.MyUniLesson.app.domain;
 
+import com.MyUniLesson.app.exception.*;
+
 import java.io.*;
 import java.util.*;
 
@@ -7,11 +9,9 @@ public class MyUniLesson {
     private static MyUniLesson myUniLesson;
     private Map<Integer, CorsoDiLaurea> elencoCdl;
     private List<Lezione> elencoLezioni;
-
     private CorsoDiLaurea cdlSelezionato;
-    //private Insegnamento insSelezionato;
     private Lezione lezioneSelezionata;
-    //private List<Lezione> lezCorrente;
+
 
     public MyUniLesson() { //Singleton
         this.elencoLezioni = new LinkedList<Lezione>();
@@ -19,11 +19,10 @@ public class MyUniLesson {
         loadCdl();
     }
 
-    /*
     public List<Lezione> getLezCorrente() {
-        return lezCorrente;
+        return cdlSelezionato.getLezCorrente();
     }
-     */
+
 
     public static MyUniLesson getInstance() {
         if (myUniLesson == null)
@@ -60,7 +59,7 @@ public class MyUniLesson {
                 cdl.inserisciStudente(strings[1], new Studente(strings[1], strings[2], strings[3]));
 
             }
-            elencoCdl = mapCdl; //salvo tutti i corsi di laurea dentro in elencoCdl
+            elencoCdl = mapCdl;
 
         } catch (Exception e) {
             System.err.println("errore: " + e);
@@ -73,76 +72,44 @@ public class MyUniLesson {
         return elencoCdl;
     }
 
-    public Map<Integer, Insegnamento> mostraInsegnamenti(int codiceCdl) throws Exception {
+    public Map<Integer, Insegnamento> mostraInsegnamenti(int codiceCdl) throws CdlException {
         cdlSelezionato = elencoCdl.get(codiceCdl);
         if (cdlSelezionato == null) {
-            throw new Exception("Errore nel corso di laurea inserito");
+            throw new CdlException("Errore nel corso di laurea inserito");
         } else {
             return cdlSelezionato.getInsegnamenti();
         }
     }
 
-    public void selezionaInsegnamento(int codiceInsegnamento) throws Exception {
+    public void selezionaInsegnamento(int codiceInsegnamento) throws InsegnamentoException {
         cdlSelezionato.cercaInsegnamenti(codiceInsegnamento);
 
-        //insSelezionato = cdlSelezionato.cercaInsegnamenti(codiceInsegnamento);
-        //if(insSelezionato == null) throw new Exception("Errore nell'insegnamento inserito");
     }
 
     public void creaLezione(Date data, int durata, boolean ricorrenza) {
         cdlSelezionato.creaLezione(data, durata, ricorrenza);
 
-        /*
-        lezCorrente = new LinkedList<Lezione>();
-        Date end;
-
-        if (data.getMonth() > 5) {
-            end = new Date(data.getYear(), Calendar.DECEMBER, 31);
-        } else {
-            end = new Date(data.getYear(), Calendar.JUNE, 30);
-        }
-        do {
-            if (insSelezionato.verificaDisponibilita(data)) {
-                lezCorrente.add(new Lezione(data, durata));
-            } else {
-                System.out.println("Errore: Impossibile inserire la lezione di giorno " + data);
-            }
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(data);
-            calendar.add(Calendar.DATE, 7);
-            data = calendar.getTime();
-        } while (ricorrenza && data.before(end));
-         */
     }
 
-    public void confermaInserimento() throws Exception {
+    public void confermaInserimento() throws LezioneException {
         elencoLezioni.addAll(cdlSelezionato.confermaLezioni());
-        deseleziona();
+        //deseleziona();
 
-        /*
-        if (lezCorrente != null) {
-            insSelezionato.aggiungiLezione(lezCorrente);
-            elencoLezioni.addAll(lezCorrente);
-        } else {
-            throw new Exception("Errore: lezione non inserita");
-        }
-        deseleziona();
-         */
     }
 
     //UC2
 
-    public boolean identificaStudente(String matricola, int codiceCdl) throws Exception {
+    public boolean identificaStudente(String matricola, int codiceCdl) throws StudenteException {
         cdlSelezionato = elencoCdl.get(codiceCdl);
         return cdlSelezionato.cercaStudente(matricola);
     }
 
-    public List<Insegnamento> mostraLezioniPrenotabili() throws Exception {
+    public List<Insegnamento> mostraLezioniPrenotabili() throws LezioneException {
         //Non consideriamo lo scenario alternativo in cui non sono presenti lezioni prenotabili
         return cdlSelezionato.cercaLezioni();
     }
 
-    public void creaPartecipazione(int codiceLezione) throws Exception {
+    public void creaPartecipazione(int codiceLezione) throws PartecipazioneException {
         for (Lezione l : elencoLezioni) {
             if (l.getCodice() == codiceLezione) {
                 lezioneSelezionata = l;
@@ -159,7 +126,7 @@ public class MyUniLesson {
         String matricola = cdlSelezionato.getMatricolaStudenteSelezionato();
         lezioneSelezionata.aggiungiPartecipazione(matricola);
         System.out.println("Partecipazione Confermata ! ");
-        deseleziona();
+        //deseleziona();
     }
 
 
@@ -171,9 +138,9 @@ public class MyUniLesson {
 
     // Others
 
-    public void deseleziona() {
+    /*public void deseleziona() {
         cdlSelezionato.deseleziona();
         cdlSelezionato = null;
         lezioneSelezionata = null;
-    }
+    }*/
 }
