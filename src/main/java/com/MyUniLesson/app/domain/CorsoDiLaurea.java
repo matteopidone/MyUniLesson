@@ -6,6 +6,7 @@ public class CorsoDiLaurea {
     private int codice;
     private String nome;
     private Map<Integer, Insegnamento> elencoInsegnamenti;
+    private Insegnamento insSelezionato;
     private Studente studenteSelezionato;
     private Map<String, Studente> elencoStudenti;
 
@@ -17,6 +18,8 @@ public class CorsoDiLaurea {
         this.elencoStudenti = new HashMap<String, Studente>();
     }
 
+    // Avviamento
+
     public void inserisciInsegnamento(int codice, Insegnamento i) {
         elencoInsegnamenti.put(codice, i);
     }
@@ -25,15 +28,28 @@ public class CorsoDiLaurea {
         elencoStudenti.put(matricola, s);
     }
 
-    public Insegnamento cercaInsegnamenti(int codiceInsegnamento) {
-        return elencoInsegnamenti.get(codiceInsegnamento);
+    // UC
+
+    public void cercaInsegnamenti(int codiceInsegnamento) throws Exception {
+        insSelezionato = elencoInsegnamenti.get(codiceInsegnamento);
+        if (insSelezionato == null) throw new Exception("Errore nell'insegnamento inserito");
+
+        //return elencoInsegnamenti.get(codiceInsegnamento);
+    }
+
+    public void creaLezione(Date data, int durata, boolean ricorrenza) {
+        insSelezionato.creaLezione(data, durata, ricorrenza);
+    }
+
+    public List<Lezione> confermaLezioni() throws Exception {
+        return insSelezionato.confermaLezioni();
     }
 
     public boolean cercaStudente(String matricola) throws Exception {
         studenteSelezionato = elencoStudenti.get(matricola);
-        if(studenteSelezionato != null){
+        if (studenteSelezionato != null) {
             return true;
-        } else{
+        } else {
             throw new Exception("Studente non trovato");
         }
     }
@@ -48,7 +64,7 @@ public class CorsoDiLaurea {
         for (Map.Entry<Integer, Insegnamento> entry : elencoInsegnamenti.entrySet()) {
             elencoLezioni = entry.getValue().cercaLezioniPrenotabili(matricola);
             i = new Insegnamento(entry.getValue().getCodice(), entry.getValue().getNome(), entry.getValue().getCFU());
-            if(!elencoLezioni.isEmpty()) {
+            if (!elencoLezioni.isEmpty()) {
                 i.aggiungiLezione(elencoLezioni);
                 count++;
             }
@@ -60,6 +76,7 @@ public class CorsoDiLaurea {
             return insLezioni;
         }
     }
+
     //Getters and Setters
 
     public int getCodice() {
@@ -80,6 +97,13 @@ public class CorsoDiLaurea {
 
     public String getMatricolaStudenteSelezionato() {
         return studenteSelezionato.getMatricola();
+    }
+
+    // Others
+
+    public void deseleziona() {
+        insSelezionato.deseleziona();
+        insSelezionato = null;
     }
 
     @Override

@@ -3,14 +3,9 @@ package com.MyUniLesson.app;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.MyUniLesson.app.domain.*;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.*;
 
-import org.junit.jupiter.api.Test;
-
-import java.util.Calendar;
-import java.util.Date;
-
+import java.util.*;
 
 /**
  * Unit test for simple App.

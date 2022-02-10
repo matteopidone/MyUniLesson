@@ -1,9 +1,6 @@
 package com.MyUniLesson.app.domain;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Pattern;
+import java.util.*;
 
 public class Lezione {
     private int codice;
@@ -17,22 +14,6 @@ public class Lezione {
         this.data = data;
         this.durata = durata;
         this.elencoPartecipazioni = new HashMap<String, Partecipazione>();
-    }
-
-    public Partecipazione getpCorrente() {
-        return pCorrente;
-    }
-
-    public Date getData() {
-        return data;
-    }
-
-    public int getDurata() {
-        return durata;
-    }
-
-    public int getCodice() {
-        return codice;
     }
 
     public boolean nonDisponibile(Date data) {
@@ -62,6 +43,24 @@ public class Lezione {
         } else throw new Exception("Invocazione metodi non rispettata");
         //if(elencoPartecipazioni.put(matricola, pCorrente) == null) throw new Exception("Impossibile aggiungere la partecipazione");
         //pCorrente = null; //rimangone le cose selezionate da deselezionare
+    }
+
+    //Getters and Setters
+
+    public Partecipazione getpCorrente() {
+        return pCorrente;
+    }
+
+    public Date getData() {
+        return data;
+    }
+
+    public int getDurata() {
+        return durata;
+    }
+
+    public int getCodice() {
+        return codice;
     }
 
     @Override

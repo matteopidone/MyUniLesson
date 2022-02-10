@@ -11,6 +11,8 @@ public class Studente {
         this.cognome = cognome;
     }
 
+    //Getters and Setters
+
     public String getMatricola() {
         return matricola;
     }

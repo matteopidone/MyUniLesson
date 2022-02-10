@@ -1,13 +1,9 @@
 package com.MyUniLesson.app;
 
-import com.MyUniLesson.app.domain.CorsoDiLaurea;
-import com.MyUniLesson.app.domain.Insegnamento;
-import com.MyUniLesson.app.domain.MyUniLesson;
+import com.MyUniLesson.app.domain.*;
 
 import java.io.*;
 import java.util.*;
-
-import static java.lang.System.in;
 
 public class App {
 

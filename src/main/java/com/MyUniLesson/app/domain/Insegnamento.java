@@ -6,6 +6,7 @@ public class Insegnamento {
     private int codice;
     private String nome;
     private int CFU;
+    private List<Lezione> lezCorrente;
     private List<Lezione> lezioniInsegnamento;
 
     public Insegnamento(int codice, String nome, int CFU) {
@@ -13,6 +14,28 @@ public class Insegnamento {
         this.nome = nome;
         this.CFU = CFU;
         this.lezioniInsegnamento = new LinkedList<Lezione>();
+    }
+
+    public void creaLezione(Date data, int durata, boolean ricorrenza) {
+        lezCorrente = new LinkedList<Lezione>();
+        Date end;
+
+        if (data.getMonth() > 5) {
+            end = new Date(data.getYear(), Calendar.DECEMBER, 31);
+        } else {
+            end = new Date(data.getYear(), Calendar.JUNE, 30);
+        }
+        do {
+            if (verificaDisponibilita(data)) {
+                lezCorrente.add(new Lezione(data, durata));
+            } else {
+                System.out.println("Errore: Impossibile inserire la lezione di giorno " + data);
+            }
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(data);
+            calendar.add(Calendar.DATE, 7);
+            data = calendar.getTime();
+        } while (ricorrenza && data.before(end));
     }
 
     public boolean verificaDisponibilita(Date data) {
@@ -24,8 +47,13 @@ public class Insegnamento {
         return true;
     }
 
-    public void aggiungiLezione(List lezCorrente) {
-        this.lezioniInsegnamento.addAll(lezCorrente);
+    public List<Lezione> confermaLezioni() throws Exception {
+        if (lezCorrente != null) {
+            aggiungiLezione(lezCorrente);
+        } else {
+            throw new Exception("Errore: lezione non inserita");
+        }
+        return lezCorrente;
     }
 
     public List<Lezione> cercaLezioniPrenotabili(String matricola) {
@@ -54,6 +82,16 @@ public class Insegnamento {
 
     public List<Lezione> getLezioniInsegnamento() {
         return lezioniInsegnamento;
+    }
+
+    public void aggiungiLezione(List<Lezione> lezioni) {
+        this.lezioniInsegnamento.addAll(lezioni);
+    }
+
+    // Others
+
+    public void deseleziona() {
+        lezCorrente = null;
     }
 
     @Override

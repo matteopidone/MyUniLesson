@@ -7,6 +7,8 @@ public class Partecipazione {
         this.studente = studente;
     }
 
+    //Getters and Setters
+
     public Studente getStudente() {
         return studente;
     }

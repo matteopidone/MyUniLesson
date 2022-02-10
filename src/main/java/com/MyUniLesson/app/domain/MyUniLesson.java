@@ -9,9 +9,9 @@ public class MyUniLesson {
     private List<Lezione> elencoLezioni;
 
     private CorsoDiLaurea cdlSelezionato;
-    private Insegnamento insSelezionato;
+    //private Insegnamento insSelezionato;
     private Lezione lezioneSelezionata;
-    private List<Lezione> lezCorrente;
+    //private List<Lezione> lezCorrente;
 
     public MyUniLesson() { //Singleton
         this.elencoLezioni = new LinkedList<Lezione>();
@@ -19,9 +19,11 @@ public class MyUniLesson {
         loadCdl();
     }
 
+    /*
     public List<Lezione> getLezCorrente() {
         return lezCorrente;
     }
+     */
 
     public static MyUniLesson getInstance() {
         if (myUniLesson == null)
@@ -81,11 +83,16 @@ public class MyUniLesson {
     }
 
     public void selezionaInsegnamento(int codiceInsegnamento) throws Exception {
-        insSelezionato = cdlSelezionato.cercaInsegnamenti(codiceInsegnamento);
-        if(insSelezionato == null) throw new Exception("Errore nell'insegnamento inserito");
+        cdlSelezionato.cercaInsegnamenti(codiceInsegnamento);
+
+        //insSelezionato = cdlSelezionato.cercaInsegnamenti(codiceInsegnamento);
+        //if(insSelezionato == null) throw new Exception("Errore nell'insegnamento inserito");
     }
 
     public void creaLezione(Date data, int durata, boolean ricorrenza) {
+        cdlSelezionato.creaLezione(data, durata, ricorrenza);
+
+        /*
         lezCorrente = new LinkedList<Lezione>();
         Date end;
 
@@ -105,10 +112,14 @@ public class MyUniLesson {
             calendar.add(Calendar.DATE, 7);
             data = calendar.getTime();
         } while (ricorrenza && data.before(end));
+         */
     }
 
     public void confermaInserimento() throws Exception {
+        elencoLezioni.addAll(cdlSelezionato.confermaLezioni());
+        deseleziona();
 
+        /*
         if (lezCorrente != null) {
             insSelezionato.aggiungiLezione(lezCorrente);
             elencoLezioni.addAll(lezCorrente);
@@ -116,6 +127,7 @@ public class MyUniLesson {
             throw new Exception("Errore: lezione non inserita");
         }
         deseleziona();
+         */
     }
 
     //UC2
@@ -136,7 +148,6 @@ public class MyUniLesson {
                 lezioneSelezionata = l;
                 break;
             }
-
         }
         if (lezioneSelezionata != null) {
             lezioneSelezionata.generaPartecipazione(cdlSelezionato.getStudenteSelezionato());
@@ -161,9 +172,8 @@ public class MyUniLesson {
     // Others
 
     public void deseleziona() {
+        cdlSelezionato.deseleziona();
         cdlSelezionato = null;
-        insSelezionato = null;
         lezioneSelezionata = null;
-        lezCorrente = null;
     }
 }
