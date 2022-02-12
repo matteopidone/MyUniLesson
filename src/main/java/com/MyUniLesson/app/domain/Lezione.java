@@ -10,14 +10,19 @@ public class Lezione {
     private int codice;
     private Date data;
     private int durata;
+    private boolean appello;
     private Map<String, Partecipazione> elencoPartecipazioni;
     private Partecipazione pCorrente;
+    private Map<String, Partecipazione> elencoAssenze;
+    private Map<String, Partecipazione> elencoPresenze;
+    private PresenzeObserver presenzeObserver;
 
     public Lezione(Date data, int durata) {
         this.codice = (int) System.currentTimeMillis();
         this.data = data;
         this.durata = durata;
         this.elencoPartecipazioni = new HashMap<String, Partecipazione>();
+        this.appello=false;
     }
 
     public boolean nonDisponibile(Date data) {
@@ -45,6 +50,26 @@ public class Lezione {
                 pCorrente = null;
             } else throw new PartecipazioneException("Lo studente sta già partecipando alla lezione");
         } else throw new MyUniLessonException("Invocazione metodi non rispettata");
+
+    }
+
+    public void registraPresenza(String matricola, Partecipazione partecipazione){
+
+    }
+
+    public void registraAssenza(String matricola, Partecipazione partecipazione){
+
+    }
+
+    public void creaElenchiAppello(){
+
+    }
+
+    public List<Studente> cercaStudenti(){
+        return null;
+    }
+
+    public void inserisciPresenza (Studente studente, boolean presenza){
 
     }
 

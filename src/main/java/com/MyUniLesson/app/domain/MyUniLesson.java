@@ -5,12 +5,14 @@ import com.MyUniLesson.app.exception.*;
 import java.io.*;
 import java.util.*;
 
-public class MyUniLesson {
+public class MyUniLesson {      //FAI CASO D'USO D'AVVIAMENTO UC6
     private static MyUniLesson myUniLesson;
     private Map<Integer, CorsoDiLaurea> elencoCdl;
     private List<Lezione> elencoLezioni;
     private CorsoDiLaurea cdlSelezionato;
     private Lezione lezioneSelezionata;
+    private Docente docenteSelezionato;
+    private Map<Integer, Docente> elencoDocenti;
 
 
     public MyUniLesson() { //Singleton
@@ -129,6 +131,34 @@ public class MyUniLesson {
         //deseleziona();
     }
 
+    // UC6
+
+    public Map<Integer, Insegnamento> cercaInsegnamenti(){
+
+        return null;
+    }
+
+    public List<Lezione> cercaLezioni (int codiceInsegnamento){
+
+        return null;
+    }
+
+    public void identificaDocente (int codiceDocente){
+
+    }
+
+    public List<Studente> iniziaAppello(int codiceLezione){
+
+        return null;
+    }
+
+    public void terminaAppello(){
+
+    }
+
+    public void inserisciPresenza(Studente studente, boolean presenza){
+
+    }
 
     // Getters and Setters
 

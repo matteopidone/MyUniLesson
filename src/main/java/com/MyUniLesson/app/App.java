@@ -26,6 +26,7 @@ public class App {
                     "Seleziona l'operazione:\n" +
                     "1. Inserisci Lezione\n" +
                     "2. Inserisci Partecipazione dello studente\n" +
+                    "3. Fai l'Appello\n" +
                     "0. Esci");
             try {
                 scelta = Integer.parseInt(tastiera.readLine());
@@ -110,6 +111,8 @@ public class App {
                         break;
                     }
 
+                case 3:
+                    break;
                 default:
                     System.out.println("Scelta non valida");
                     break;

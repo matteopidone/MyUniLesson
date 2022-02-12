@@ -86,6 +86,10 @@ public class Insegnamento {
         return elencoLezioniPrenotabili;
     }
 
+    public List<Lezione> cercaLezioni(){
+        return null;
+    }
+
     //Getters and Setters
 
     public int getCodice() {
