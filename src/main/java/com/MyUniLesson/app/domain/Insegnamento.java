@@ -79,7 +79,7 @@ public class Insegnamento {
 
 
         for (Lezione l : lezioniInsegnamento) {
-            if (!l.verificaPartecipazione(matricola) && l.getData().before(end) && l.getData().after(start)) {
+            if (!l.verificaPartecipazione(matricola) /*&& l.getData().before(end) && l.getData().after(start)*/) {      //AL MOMENTO LI ABBIAMO RIMOSSI PER TESTARE
                 elencoLezioniPrenotabili.add(l);
             }
         }
@@ -87,7 +87,14 @@ public class Insegnamento {
     }
 
     public List<Lezione> cercaLezioni(){
-        return null;
+        List<Lezione> elencoLezioni= new LinkedList<Lezione>();
+        Date today= new Date();
+        for(Lezione l : lezioniInsegnamento){
+            if(l.getData().before(today) && !l.isAppello()){               //verifica la data e che l'appello non sia stato fatto (!appello= !false=true)
+                elencoLezioni.add(l);
+            }
+        }
+        return elencoLezioni;
     }
 
     //Getters and Setters

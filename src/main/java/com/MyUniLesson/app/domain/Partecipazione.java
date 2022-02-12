@@ -8,11 +8,13 @@ public class Partecipazione extends Observable {
 
     public Partecipazione(Studente studente) {
         this.studente = studente;
-        //Setta la partecipazione a pendente!
+        this.statoPartecipazione= new StatoPendente(this);
     }
 
-    private void aggiornaPartecipazione(boolean presenza){
-
+    public void aggiornaPartecipazione(boolean presenza){
+        statoPartecipazione.aggiornaPartecipazione(presenza);
+        this.setChanged();
+        this.notifyObservers();
     }
 
     //Getters and Setters
@@ -22,12 +24,16 @@ public class Partecipazione extends Observable {
         return studente.getMatricola();
     }
 
-    //public void setStato(StatoPartecipazione statoPartecipazione) {
-      //  this.statoPartecipazione = statoPartecipazione;
-    //}
+    public void setStato(StatoPartecipazione statoPartecipazione) {
+      this.statoPartecipazione = statoPartecipazione;
+    }
 
     public Studente getStudente() {
         return studente;
+    }
+
+    public StatoPartecipazione getStatoPartecipazione() {
+        return statoPartecipazione;
     }
 
     @Override

@@ -112,7 +112,41 @@ public class App {
                     }
 
                 case 3:
-                    break;
+                    try{
+                        System.out.println("Inserisci il codice del docente: ");
+                        int codiceDocente = Integer.parseInt(tastiera.readLine());
+                        myUniLesson.identificaDocente(codiceDocente);
+                        Map<Integer, Insegnamento> elencoInsegnamenti= myUniLesson.cercaInsegnamenti();
+                        for(Map.Entry<Integer, Insegnamento> entry : elencoInsegnamenti.entrySet()){
+                            System.out.println(entry.getValue() + "\n");
+                        }
+                        System.out.println("Inserisci il codice dell'insegnamento: ");
+                        int codiceInsegnamento = Integer.parseInt(tastiera.readLine());
+                        List<Lezione> elencoLezioni= myUniLesson.cercaLezioni(codiceInsegnamento);
+                        for(Lezione l : elencoLezioni){
+                            System.out.println(l + "\n");
+                        }
+                        System.out.println("Inserisci il codice della lezione: ");
+                        int codiceLezione = Integer.parseInt(tastiera.readLine());
+                        List<Studente> elencoStudenti= myUniLesson.iniziaAppello(codiceLezione);
+                        for(Studente s: elencoStudenti){
+                            System.out.println("Lo studente "+s+" e' presente? (true/false) ");
+                            boolean presenza = Boolean.parseBoolean(tastiera.readLine());
+                            if(presenza==true)
+                                myUniLesson.inserisciPresenza(s, true);
+                            else
+                                myUniLesson.inserisciPresenza(s, false);
+                        }
+                        myUniLesson.terminaAppello();
+
+                        System.out.println("Ci sono "+myUniLesson.getPresenti()+" studenti presenti e "+myUniLesson.getAssenti()+" studenti assenti.");     //Per vedere quanti alunni presenti o assenti ha inserito nelle apposite liste.
+
+                    } catch (Exception e) {
+                        System.out.println("ERRORE: " + e.getMessage());
+                    } finally {
+                        break;
+                    }
+
                 default:
                     System.out.println("Scelta non valida");
                     break;

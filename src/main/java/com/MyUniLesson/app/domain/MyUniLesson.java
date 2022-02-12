@@ -5,26 +5,29 @@ import com.MyUniLesson.app.exception.*;
 import java.io.*;
 import java.util.*;
 
-public class MyUniLesson {      //FAI CASO D'USO D'AVVIAMENTO UC6
+public class MyUniLesson {
     private static MyUniLesson myUniLesson;
     private Map<Integer, CorsoDiLaurea> elencoCdl;
     private List<Lezione> elencoLezioni;
     private CorsoDiLaurea cdlSelezionato;
-    private Lezione lezioneSelezionata;
-    private Docente docenteSelezionato;
+    private Lezione lezioneSelezionata;                     //Teoricamente dovresti deselezionarli alla fine
+    private Docente docenteSelezionato;                     //Teoricamente dovresti deselezionarli alla fine
     private Map<Integer, Docente> elencoDocenti;
 
 
     public MyUniLesson() { //Singleton
         this.elencoLezioni = new LinkedList<Lezione>();
         this.elencoCdl = new HashMap<Integer, CorsoDiLaurea>();
+        this.elencoDocenti= new HashMap<Integer, Docente>();
         loadCdl();
+        loadDocenti();
+
+        System.out.println(elencoDocenti);          //Per Verifica, da rimuovere dopo
     }
 
     public List<Lezione> getLezCorrente() {
         return cdlSelezionato.getLezCorrente();
     }
-
 
     public static MyUniLesson getInstance() {
         if (myUniLesson == null)
@@ -65,6 +68,32 @@ public class MyUniLesson {      //FAI CASO D'USO D'AVVIAMENTO UC6
 
         } catch (Exception e) {
             System.err.println("errore: " + e);
+        }
+    }
+
+    public void loadDocenti(){
+        try {
+            BufferedReader bfDocenti = new BufferedReader(new FileReader("Docenti.txt"));
+            BufferedReader bfInsErogati = new BufferedReader(new FileReader("InsegnamentiErogati.txt"));
+            String[] strings;
+            String str;
+            while ((str = bfDocenti.readLine()) != null) {
+                strings = str.split("-");
+                elencoDocenti.put(Integer.parseInt(strings[0]), new Docente(Integer.parseInt(strings[0]), strings[1], strings[2]));
+            }
+
+            while ((str = bfInsErogati.readLine()) != null) {
+
+                strings = str.split("-");
+                CorsoDiLaurea cdl = elencoCdl.get(Integer.parseInt(strings[1]));
+                Insegnamento i = cdl.getInsegnamenti().get(Integer.parseInt(strings[2]));
+                Docente d = elencoDocenti.get(Integer.parseInt(strings[0]));
+                d.aggiungiInsegnamento(i);
+            }
+
+
+        }catch (Exception e){
+            System.err.println("errore: " + e.getMessage());
         }
     }
 
@@ -134,30 +163,35 @@ public class MyUniLesson {      //FAI CASO D'USO D'AVVIAMENTO UC6
     // UC6
 
     public Map<Integer, Insegnamento> cercaInsegnamenti(){
-
-        return null;
+        return docenteSelezionato.getInsegnamenti();
     }
 
     public List<Lezione> cercaLezioni (int codiceInsegnamento){
-
-        return null;
+        return docenteSelezionato.cercaLezioni(codiceInsegnamento);
     }
 
     public void identificaDocente (int codiceDocente){
-
+        docenteSelezionato=elencoDocenti.get(codiceDocente);
     }
 
     public List<Studente> iniziaAppello(int codiceLezione){
-
-        return null;
+        for(Lezione l : elencoLezioni){
+            if(l.getCodice()== codiceLezione){
+                lezioneSelezionata=l;
+                break;
+            }
+        }
+        lezioneSelezionata.creaElenchiAppello();
+        return lezioneSelezionata.cercaStudenti();
     }
 
     public void terminaAppello(){
-
+        lezioneSelezionata.setElencoPartecipazioni(null);
+        lezioneSelezionata.setAppello(true);
     }
 
     public void inserisciPresenza(Studente studente, boolean presenza){
-
+        lezioneSelezionata.inserisciPresenza(studente, presenza);
     }
 
     // Getters and Setters
@@ -166,9 +200,17 @@ public class MyUniLesson {      //FAI CASO D'USO D'AVVIAMENTO UC6
         return elencoLezioni;
     }
 
+    public int getPresenti() {
+        return lezioneSelezionata.getElencoPresenze().size();
+    }
+
+    public int getAssenti() {
+        return lezioneSelezionata.getElencoAssenze().size();
+    }
+
     // Others
 
-    /*public void deseleziona() {
+    /* public void deseleziona() {
         cdlSelezionato.deseleziona();
         cdlSelezionato = null;
         lezioneSelezionata = null;

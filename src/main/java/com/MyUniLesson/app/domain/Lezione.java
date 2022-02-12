@@ -23,6 +23,7 @@ public class Lezione {
         this.durata = durata;
         this.elencoPartecipazioni = new HashMap<String, Partecipazione>();
         this.appello=false;
+        this.presenzeObserver= new PresenzeObserver(this);
     }
 
     public boolean nonDisponibile(Date data) {
@@ -41,6 +42,7 @@ public class Lezione {
     public void generaPartecipazione(Studente studenteSelezionato) throws PartecipazioneException {
         pCorrente = new Partecipazione(studenteSelezionato);
         if (pCorrente == null) throw new PartecipazioneException("Partecipazione non creata");
+        pCorrente.addObserver(presenzeObserver);
     }
 
     public void aggiungiPartecipazione(String matricola) throws Exception {
@@ -54,23 +56,32 @@ public class Lezione {
     }
 
     public void registraPresenza(String matricola, Partecipazione partecipazione){
-
+        elencoPresenze.put(matricola, partecipazione);
+        elencoPartecipazioni.remove(matricola);
     }
 
     public void registraAssenza(String matricola, Partecipazione partecipazione){
-
+        elencoAssenze.put(matricola, partecipazione);
+        elencoPartecipazioni.remove(matricola);
     }
 
     public void creaElenchiAppello(){
-
+        elencoAssenze= new HashMap<String, Partecipazione>();
+        elencoPresenze= new HashMap<String, Partecipazione>();
     }
 
     public List<Studente> cercaStudenti(){
-        return null;
+        List<Studente> elencoStudenti= new LinkedList<Studente>(){};
+        for(Map.Entry<String, Partecipazione> entry : elencoPartecipazioni.entrySet()){
+            elencoStudenti.add(entry.getValue().getStudente());
+        }
+        return elencoStudenti;
     }
 
     public void inserisciPresenza (Studente studente, boolean presenza){
-
+        String matricola=studente.getMatricola();
+        Partecipazione partecipazione= elencoPartecipazioni.get(matricola);
+        partecipazione.aggiornaPartecipazione(presenza);
     }
 
     //Getters and Setters
@@ -89,6 +100,26 @@ public class Lezione {
 
     public int getCodice() {
         return codice;
+    }
+
+    public Map<String, Partecipazione> getElencoAssenze() {
+        return elencoAssenze;
+    }
+
+    public Map<String, Partecipazione> getElencoPresenze() {
+        return elencoPresenze;
+    }
+
+    public boolean isAppello() {
+        return appello;
+    }
+
+    public void setElencoPartecipazioni(Map<String, Partecipazione> elencoPartecipazioni) {
+        this.elencoPartecipazioni = elencoPartecipazioni;
+    }
+
+    public void setAppello(boolean appello) {
+        this.appello = appello;
     }
 
     @Override

@@ -133,6 +133,46 @@ public class TestMyUniLesson {
         }
     }
 
+    //UC6 Test
+    @Test
+    public void testModificaStatoPartecipazione(){
+        try {
+
+            Date d1 = new Date(2022 - 1900, 2 - 1, 11, 10, 0);
+
+            myUniLesson.mostraInsegnamenti(1);
+            myUniLesson.selezionaInsegnamento(1);
+            myUniLesson.creaLezione(d1, 2, false);
+            myUniLesson.confermaInserimento();
+            Lezione lezione = myUniLesson.getLezCorrente().get(0);
+
+            myUniLesson.identificaStudente("O46002170", 1);
+            System.out.println(myUniLesson.mostraLezioniPrenotabili());
+            myUniLesson.creaPartecipazione(lezione.getCodice());
+            myUniLesson.confermaPartecipazione();
+
+            myUniLesson.identificaStudente("O46002200", 1);
+            System.out.println(myUniLesson.mostraLezioniPrenotabili());
+            myUniLesson.creaPartecipazione(lezione.getCodice());
+            myUniLesson.confermaPartecipazione();
+
+            myUniLesson.identificaDocente(1);
+            Map<Integer, Insegnamento> elencoInsegnamenti= myUniLesson.cercaInsegnamenti();
+            List<Lezione> elencoLezioni= myUniLesson.cercaLezioni(1);
+            List<Studente> elencoStudenti= myUniLesson.iniziaAppello(lezione.getCodice());
+
+            myUniLesson.inserisciPresenza(elencoStudenti.get(0), true);
+            myUniLesson.inserisciPresenza(elencoStudenti.get(1), false);
+            myUniLesson.terminaAppello();
+
+            System.out.println("Ci sono "+myUniLesson.getPresenti()+" studenti presenti e "+myUniLesson.getAssenti()+" studenti assenti.");     //Per vedere quanti alunni presenti o assenti ha inserito nelle apposite liste.
+
+            assertEquals(1, myUniLesson.getPresenti());
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
 }
 
 
