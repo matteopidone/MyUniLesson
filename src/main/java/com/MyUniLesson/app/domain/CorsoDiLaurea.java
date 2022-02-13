@@ -105,6 +105,10 @@ public class CorsoDiLaurea {
         return studenteSelezionato.getMatricola();
     }
 
+    public Map<String, Studente> getElencoStudenti() {
+        return elencoStudenti;
+    }
+
     // Others
 
     public void deseleziona() {

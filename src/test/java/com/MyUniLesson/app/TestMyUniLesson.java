@@ -3,6 +3,7 @@ package com.MyUniLesson.app;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.MyUniLesson.app.domain.*;
+import com.MyUniLesson.app.exception.*;
 import org.junit.jupiter.api.*;
 
 import java.util.*;
@@ -23,7 +24,7 @@ public class TestMyUniLesson {
     @AfterEach
     public void clearTest() {
 
-        //myUniLesson.deseleziona(); Matteo
+        //myUniLesson.deseleziona();
     }
 
     //UC1 Test
@@ -173,6 +174,35 @@ public class TestMyUniLesson {
         }
     }
 
+    @Test
+    public void TestEsistenzaDocenti() {
+        try {
+            myUniLesson.identificaDocente(9999);
+            fail("Docente trovato.");
+        }catch (DocentiException m){
+            assertNotNull(m);
+        }
+        catch (Exception e){
+            fail("Error Test");
+        }
+    }
+
+    @Test
+    public void TestEsistenzaLezione() {
+        try {
+            myUniLesson.identificaDocente(1);
+            //Map<Integer, Insegnamento> elencoInsegnamenti= myUniLesson.cercaInsegnamenti();
+            myUniLesson.cercaLezioni(1);
+            myUniLesson.iniziaAppello(1);
+
+            fail("Lezione trovata.");
+        }catch (LezioneException l){
+            assertNotNull(l);
+        }
+        catch (Exception e){
+            fail("Error Test");
+        }
+    }
 }
 
 

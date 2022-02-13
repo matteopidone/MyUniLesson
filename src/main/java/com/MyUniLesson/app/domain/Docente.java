@@ -1,4 +1,6 @@
 package com.MyUniLesson.app.domain;
+import com.MyUniLesson.app.exception.*;
+
 import java.util.*;
 
 public class Docente {
@@ -7,8 +9,11 @@ public class Docente {
     private String cognome;
     private Map<Integer, Insegnamento> elencoInsErogati;
 
-    public List<Lezione> cercaLezioni(int codiceInsegnamento){
+    public List<Lezione> cercaLezioni(int codiceInsegnamento) throws Exception {
         Insegnamento ins= elencoInsErogati.get(codiceInsegnamento);
+        if(ins==null){
+            throw new InsegnamentoException("Insegnamento non trovato.");
+        }
         return ins.cercaLezioni();
     }
 

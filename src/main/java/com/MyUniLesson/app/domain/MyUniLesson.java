@@ -21,8 +21,8 @@ public class MyUniLesson {
         this.elencoDocenti= new HashMap<Integer, Docente>();
         loadCdl();
         loadDocenti();
-
-        System.out.println(elencoDocenti);          //Per Verifica, da rimuovere dopo
+        loadLezioni();
+        loadPartecipazioni();
     }
 
     public List<Lezione> getLezCorrente() {
@@ -67,7 +67,7 @@ public class MyUniLesson {
             elencoCdl = mapCdl;
 
         } catch (Exception e) {
-            System.err.println("errore: " + e);
+            System.err.println("errore: " + e.getMessage());
         }
     }
 
@@ -92,6 +92,51 @@ public class MyUniLesson {
             }
 
 
+        }catch (Exception e){
+            System.err.println("errore: " + e.getMessage());
+        }
+    }
+
+    public void loadLezioni(){
+        CorsoDiLaurea cdl;
+        Insegnamento i;
+        Lezione l;
+
+        try {
+            BufferedReader bfLezioni = new BufferedReader(new FileReader("Lezioni.txt"));
+            String[] strings;
+            String str;
+            while ((str = bfLezioni.readLine()) != null) {
+                strings = str.split("-");
+                cdl= elencoCdl.get(Integer.parseInt(strings[0]));
+                i=cdl.getInsegnamenti().get(Integer.parseInt(strings[1]));
+                l= new Lezione(Integer.parseInt(strings[2]), new Date(Integer.parseInt(strings[3])-1900, Integer.parseInt(strings[4])-1, Integer.parseInt(strings[5]), Integer.parseInt(strings[6]), 0), Integer.parseInt(strings[7]));
+                i.aggiungiLezione(l);
+                elencoLezioni.add(l);
+            }
+        }catch (Exception e){
+            System.err.println("errore: " + e.getMessage());
+        }
+    }
+
+    public void loadPartecipazioni(){
+        Studente s;
+        try {
+            BufferedReader bfPartecipazioni = new BufferedReader(new FileReader("Partecipazioni.txt"));
+            String[] strings;
+            String str;
+            while ((str = bfPartecipazioni.readLine()) != null) {
+                strings = str.split("-");
+                s=elencoCdl.get(Integer.parseInt(strings[1])).getElencoStudenti().get(strings[2]);            //Preleva lo studente
+
+                for(Lezione l : elencoLezioni){
+                    if(l.getCodice()== Integer.parseInt(strings[0])){
+                        l.generaPartecipazione(s);
+                        l.aggiungiPartecipazione(s.getMatricola());
+                        break;
+                    }
+                }
+            }
         }catch (Exception e){
             System.err.println("errore: " + e.getMessage());
         }
@@ -125,7 +170,6 @@ public class MyUniLesson {
     public void confermaInserimento() throws LezioneException {
         elencoLezioni.addAll(cdlSelezionato.confermaLezioni());
         //deseleziona();
-
     }
 
     //UC2
@@ -136,7 +180,7 @@ public class MyUniLesson {
     }
 
     public List<Insegnamento> mostraLezioniPrenotabili() throws LezioneException {
-        //Non consideriamo lo scenario alternativo in cui non sono presenti lezioni prenotabili
+        //Non consideriamo lo scenario alternativo in cui non sono presenti lezioni prenotabili.
         return cdlSelezionato.cercaLezioni();
     }
 
@@ -166,20 +210,27 @@ public class MyUniLesson {
         return docenteSelezionato.getInsegnamenti();
     }
 
-    public List<Lezione> cercaLezioni (int codiceInsegnamento){
+    public List<Lezione> cercaLezioni (int codiceInsegnamento) throws Exception {
         return docenteSelezionato.cercaLezioni(codiceInsegnamento);
     }
 
-    public void identificaDocente (int codiceDocente){
+    public void identificaDocente (int codiceDocente) throws Exception {
         docenteSelezionato=elencoDocenti.get(codiceDocente);
+        if(docenteSelezionato==null){
+            throw new DocentiException("Docente non trovato.");
+        }
     }
 
-    public List<Studente> iniziaAppello(int codiceLezione){
+    public List<Studente> iniziaAppello(int codiceLezione) throws Exception {
         for(Lezione l : elencoLezioni){
             if(l.getCodice()== codiceLezione){
                 lezioneSelezionata=l;
                 break;
             }
+        }
+
+        if(lezioneSelezionata==null){
+            throw new LezioneException("Lezione non trovata.");
         }
         lezioneSelezionata.creaElenchiAppello();
         return lezioneSelezionata.cercaStudenti();
@@ -190,7 +241,7 @@ public class MyUniLesson {
         lezioneSelezionata.setAppello(true);
     }
 
-    public void inserisciPresenza(Studente studente, boolean presenza){
+    public void inserisciPresenza(Studente studente, boolean presenza) throws Exception{
         lezioneSelezionata.inserisciPresenza(studente, presenza);
     }
 
@@ -206,6 +257,10 @@ public class MyUniLesson {
 
     public int getAssenti() {
         return lezioneSelezionata.getElencoAssenze().size();
+    }
+
+    public Map<Integer, Docente> getElencoDocenti() {
+        return elencoDocenti;
     }
 
     // Others

@@ -1,10 +1,7 @@
 package com.MyUniLesson.app;
 
-import com.MyUniLesson.app.domain.CorsoDiLaurea;
-import com.MyUniLesson.app.domain.Studente;
-import com.MyUniLesson.app.exception.LezioneException;
-import com.MyUniLesson.app.exception.PartecipazioneException;
-import com.MyUniLesson.app.exception.StudenteException;
+import com.MyUniLesson.app.domain.*;
+import com.MyUniLesson.app.exception.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

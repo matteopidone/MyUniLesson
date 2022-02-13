@@ -1,5 +1,7 @@
 package com.MyUniLesson.app.domain;
 
+import com.MyUniLesson.app.exception.*;
+
 import java.util.Observable;
 
 public class Partecipazione extends Observable {
@@ -11,8 +13,11 @@ public class Partecipazione extends Observable {
         this.statoPartecipazione= new StatoPendente(this);
     }
 
-    public void aggiornaPartecipazione(boolean presenza){
+    public void aggiornaPartecipazione(boolean presenza) throws Exception{
         statoPartecipazione.aggiornaPartecipazione(presenza);
+        if(statoPartecipazione.getClass() == StatoPendente.class){
+            throw new PartecipazioneException("Stato non aggiornato.");
+        }
         this.setChanged();
         this.notifyObservers();
     }

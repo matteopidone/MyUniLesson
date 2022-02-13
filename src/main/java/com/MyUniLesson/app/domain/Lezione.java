@@ -2,7 +2,7 @@ package com.MyUniLesson.app.domain;
 
 import com.MyUniLesson.app.exception.MyUniLessonException;
 import com.MyUniLesson.app.exception.PartecipazioneException;
-
+import static java.lang.Math.abs;
 
 import java.util.*;
 
@@ -18,7 +18,16 @@ public class Lezione {
     private PresenzeObserver presenzeObserver;
 
     public Lezione(Date data, int durata) {
-        this.codice = (int) System.currentTimeMillis();
+        this.codice = abs((int) System.currentTimeMillis());
+        this.data = data;
+        this.durata = durata;
+        this.elencoPartecipazioni = new HashMap<String, Partecipazione>();
+        this.appello=false;
+        this.presenzeObserver= new PresenzeObserver(this);
+    }
+
+    public Lezione(int codice, Date data, int durata) {         //Overload degli operatori, per caricare da file impostando il codice corretto (che serve necessariamente per il caricamento delle Partecipazioni)
+        this.codice = codice;
         this.data = data;
         this.durata = durata;
         this.elencoPartecipazioni = new HashMap<String, Partecipazione>();
@@ -78,7 +87,7 @@ public class Lezione {
         return elencoStudenti;
     }
 
-    public void inserisciPresenza (Studente studente, boolean presenza){
+    public void inserisciPresenza (Studente studente, boolean presenza) throws Exception{
         String matricola=studente.getMatricola();
         Partecipazione partecipazione= elencoPartecipazioni.get(matricola);
         partecipazione.aggiornaPartecipazione(presenza);
@@ -128,7 +137,6 @@ public class Lezione {
                 "codice=" + codice +
                 ", data=" + data +
                 ", durata=" + durata +
-                ", elencoPartecipazioni{" + elencoPartecipazioni +
                 "}" +
                 "}";
     }

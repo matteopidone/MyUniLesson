@@ -79,7 +79,7 @@ public class Insegnamento {
 
 
         for (Lezione l : lezioniInsegnamento) {
-            if (!l.verificaPartecipazione(matricola) /*&& l.getData().before(end) && l.getData().after(start)*/) {      //AL MOMENTO LI ABBIAMO RIMOSSI PER TESTARE
+            if (!l.verificaPartecipazione(matricola) && l.getData().before(end) && l.getData().after(start)) {
                 elencoLezioniPrenotabili.add(l);
             }
         }
@@ -121,6 +121,10 @@ public class Insegnamento {
         this.lezioniInsegnamento.addAll(lezioni);
     }
 
+    public void aggiungiLezione(Lezione lezione) {      //Overload degli operatori, per aggiungere la singola lezione
+        this.lezioniInsegnamento.add(lezione);
+    }
+
     // Others
 
     public void deseleziona() {
@@ -133,7 +137,6 @@ public class Insegnamento {
                 "codice=" + codice +
                 ", nome='" + nome + '\'' +
                 ", CFU=" + CFU +
-                ", lezioni{" + lezioniInsegnamento + "}" +
                 "}";
     }
 }

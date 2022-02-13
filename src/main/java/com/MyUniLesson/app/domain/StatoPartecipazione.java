@@ -4,7 +4,6 @@ public abstract class StatoPartecipazione {
     protected Partecipazione partecipazione;
 
     public void aggiornaPartecipazione (boolean presenza){
-
     }
 
     public StatoPartecipazione(Partecipazione partecipazione) {

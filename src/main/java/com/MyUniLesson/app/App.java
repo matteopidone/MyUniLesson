@@ -46,33 +46,32 @@ public class App {
                             System.out.println(entry.getValue().getCodice() + " - " + entry.getValue().getNome());
                         }
 
-                        System.out.println("Inserisci il codice del CdL");
+                        System.out.println("Inserisci il codice del CdL: ");
                         codCdl = Integer.parseInt(tastiera.readLine());
                         insMap = myUniLesson.mostraInsegnamenti(codCdl);
                         for (Map.Entry<Integer, Insegnamento> entry : insMap.entrySet()) {
                             System.out.println(entry.getValue().getCodice() + " - " + entry.getValue().getNome() + " - CFU: " + entry.getValue().getCFU());
                         }
 
-                        System.out.println("Inserisci il codice dell'insegnamento");
+                        System.out.println("Inserisci il codice dell'insegnamento: ");
                         int codIns = Integer.parseInt(tastiera.readLine());
                         myUniLesson.selezionaInsegnamento(codIns);
                         do {
-                            System.out.println("Inserisci data e ora (aaaa 'invio' mm 'invio' gg 'invio'  ora 'invio')");
+                            System.out.println("Inserisci data e ora (aaaa 'invio' mm 'invio' gg 'invio'  ora 'invio'): ");
                             //Bisogna premere invio dopo l'inserimento di ciascun parametro
                             Date d = new Date(Integer.parseInt(tastiera.readLine()) - 1900, Integer.parseInt(tastiera.readLine()) - 1,
                                     Integer.parseInt(tastiera.readLine()), Integer.parseInt(tastiera.readLine()), 0);
 
-                            System.out.println("Inserisci durata");
+                            System.out.println("Inserisci durata: ");
                             int durata = Integer.parseInt(tastiera.readLine());
 
-                            System.out.println("La lezione deve essere riccorrente? (true/false)");
+                            System.out.println("La lezione deve essere ricorrente? (true/false)");
                             boolean ricorrenza = Boolean.parseBoolean(tastiera.readLine());
 
                             myUniLesson.creaLezione(d, durata, ricorrenza);
                             myUniLesson.confermaInserimento();
-                            System.out.println("Lezioni inserite!");
 
-                            System.out.println("Vuoi inserire altre lezioni ? (s/n)");
+                            System.out.println("Vuoi inserire altre lezioni? (s/n)");
                             continua = tastiera.readLine().charAt(0);
 
                         } while (continua == 's');
@@ -86,22 +85,22 @@ public class App {
 
                 case 2:
                     try {
-                        System.out.println("Inserisci la matricola dello studente");
+                        System.out.println("Inserisci la matricola dello studente: ");
                         String matricola = tastiera.readLine();
-                        System.out.println("Inserisci il codice del CdL");
+                        System.out.println("Inserisci il codice del CdL: ");
                         codCdl = Integer.parseInt(tastiera.readLine());
                         myUniLesson.identificaStudente(matricola, codCdl);
                         insegnamentoList = myUniLesson.mostraLezioniPrenotabili();
                         for (Insegnamento i : insegnamentoList) {
                             System.out.println(i.getCodice() + " - " + i.getNome() + " - CFU: " + i.getCFU());
                             if (i.getLezioniInsegnamento().isEmpty()) {
-                                System.out.println("Nessuna lezione prenotabile\n");
+                                System.out.println("Nessuna lezione prenotabile.\n");
                             } else {
                                 System.out.println(i.getLezioniInsegnamento() + "\n");
                             }
                         }
 
-                        System.out.println("Inserisci il codice della Lezione da prenotare");
+                        System.out.println("Inserisci il codice della Lezione da prenotare: ");
                         int codice = Integer.parseInt(tastiera.readLine());
                         myUniLesson.creaPartecipazione(codice);
                         myUniLesson.confermaPartecipazione();

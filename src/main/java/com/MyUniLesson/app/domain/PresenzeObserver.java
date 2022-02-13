@@ -3,15 +3,15 @@ package com.MyUniLesson.app.domain;
 import java.util.Observable;
 import java.util.Observer;
 
-public class PresenzeObserver implements Observer {         //VAI A REGISTRARE L'OBSERVER ALLA LEZIONE.
+public class PresenzeObserver implements Observer {
     private Lezione lezione;
 
-    public PresenzeObserver(Lezione lezione) {  // DA VEDERE!
+    public PresenzeObserver(Lezione lezione) {
         this.lezione = lezione;
     }
 
     @Override
-    public void update(Observable o, Object arg) {
+    public void update(Observable o, Object arg){
         Partecipazione p=(Partecipazione) o;
         String matricola= p.getMatricolaStudente();
         if(p.getStatoPartecipazione().getClass()==StatoPresente.class){
