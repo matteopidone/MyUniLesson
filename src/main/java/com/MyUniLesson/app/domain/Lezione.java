@@ -123,6 +123,11 @@ public class Lezione {
         return appello;
     }
 
+
+    public Map<String, Partecipazione> getElencoPartecipazioni() {
+        return elencoPartecipazioni;
+    }
+
     public void setElencoPartecipazioni(Map<String, Partecipazione> elencoPartecipazioni) {
         this.elencoPartecipazioni = elencoPartecipazioni;
     }

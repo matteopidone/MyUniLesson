@@ -2,6 +2,7 @@ package com.MyUniLesson.app;
 
 
 import com.MyUniLesson.app.domain.Lezione;
+import com.MyUniLesson.app.domain.Partecipazione;
 import com.MyUniLesson.app.domain.Studente;
 import com.MyUniLesson.app.exception.MyUniLessonException;
 import com.MyUniLesson.app.exception.PartecipazioneException;
@@ -50,6 +51,24 @@ public class TestLezione {
         catch (Exception e){
             fail("Error Test");
 
+        }
+    }
+
+    @Test
+    public void testSetElencoPresenti(){
+        Lezione l = new Lezione(new Date(), 1);
+        Studente s = new Studente("O46002170", "Matteo", "Pidone");
+        try {
+            l.generaPartecipazione(s);
+            l.aggiungiPartecipazione(s.getMatricola());
+            Partecipazione p = l.getElencoPartecipazioni().get(s.getMatricola());
+
+            l.creaElenchiAppello();
+            l.inserisciPresenza(s, true);
+            assertTrue(l.getElencoPresenze().containsValue(p));
+
+        }catch(Exception e){
+            fail("Test fail ");
         }
     }
 

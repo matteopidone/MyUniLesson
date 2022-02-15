@@ -203,6 +203,33 @@ public class TestMyUniLesson {
             fail("Error Test");
         }
     }
+
+    @Test
+    public void testSetElencoPartecipazioniNull(){
+        try {
+            Lezione l = null;
+            myUniLesson.identificaDocente(1);
+            List<Lezione> elencoLezioni = myUniLesson.cercaLezioni(1);
+
+            for(Lezione l1: elencoLezioni) {
+                if(l1.getCodice() == 207465127){
+                    l = l1;
+                    break;
+                }
+
+            }
+            List<Studente> elencoStudenti = myUniLesson.iniziaAppello(l.getCodice());
+            for(Studente s: elencoStudenti){
+                myUniLesson.inserisciPresenza(s, true);
+
+            }
+            myUniLesson.terminaAppello();
+            assertNull(l.getElencoPartecipazioni());
+
+        }catch(Exception e){
+            fail("Test fail ");
+        }
+    }
 }
 
 
