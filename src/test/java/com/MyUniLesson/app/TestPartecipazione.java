@@ -14,8 +14,8 @@ public class TestPartecipazione {
     //UC2 Test
     @Test
     public void testInserisciPartecipazione(){
-        Studente s = new Studente("O46002170", "Matteo", "Pidone");
-        Partecipazione p = new Partecipazione(s);
+        Studente s = new Studente("O46002170", "Matteo", "Pidone", null);
+        Partecipazione p = new Partecipazione(s, null);
         assertEquals(s, p.getStudente());
     }
 }

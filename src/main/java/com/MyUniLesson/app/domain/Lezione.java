@@ -2,6 +2,8 @@ package com.MyUniLesson.app.domain;
 
 import com.MyUniLesson.app.exception.MyUniLessonException;
 import com.MyUniLesson.app.exception.PartecipazioneException;
+import javax.mail.MessagingException;
+
 import static java.lang.Math.abs;
 
 import java.util.*;
@@ -16,23 +18,30 @@ public class Lezione {
     private Map<String, Partecipazione> elencoAssenze;
     private Map<String, Partecipazione> elencoPresenze;
     private PresenzeObserver presenzeObserver;
+    private List<ComunicazioneLezione> elencoComunicazioni;
+    private Insegnamento insegnamento;
 
-    public Lezione(Date data, int durata) {
+    public Lezione(Date data, int durata, Insegnamento insegnamento) {
         this.codice = abs((int) System.currentTimeMillis());
         this.data = data;
         this.durata = durata;
         this.elencoPartecipazioni = new HashMap<String, Partecipazione>();
         this.appello=false;
         this.presenzeObserver= new PresenzeObserver(this);
+        this.elencoComunicazioni = new LinkedList<ComunicazioneLezione>();
+        this.insegnamento = insegnamento;
     }
 
-    public Lezione(int codice, Date data, int durata) {         //Overload degli operatori, per caricare da file impostando il codice corretto (che serve necessariamente per il caricamento delle Partecipazioni)
+    public Lezione(int codice, Date data, int durata, Insegnamento insegnamento) {         //Overload degli operatori, per caricare da file impostando il codice corretto (che serve necessariamente per il caricamento delle Partecipazioni)
         this.codice = codice;
         this.data = data;
         this.durata = durata;
         this.elencoPartecipazioni = new HashMap<String, Partecipazione>();
         this.appello=false;
         this.presenzeObserver= new PresenzeObserver(this);
+        this.elencoComunicazioni = new LinkedList<ComunicazioneLezione>();
+        this.insegnamento = insegnamento;
+
     }
 
     public boolean nonDisponibile(Date data) {
@@ -49,7 +58,7 @@ public class Lezione {
     }
 
     public void generaPartecipazione(Studente studenteSelezionato) throws PartecipazioneException {
-        pCorrente = new Partecipazione(studenteSelezionato);
+        pCorrente = new Partecipazione(studenteSelezionato, this );
         if (pCorrente == null) throw new PartecipazioneException("Partecipazione non creata");
         pCorrente.addObserver(presenzeObserver);
     }
@@ -69,9 +78,12 @@ public class Lezione {
         elencoPartecipazioni.remove(matricola);
     }
 
-    public void registraAssenza(String matricola, Partecipazione partecipazione){
+    public void registraAssenza(String matricola, Partecipazione partecipazione) throws MessagingException {
         elencoAssenze.put(matricola, partecipazione);
         elencoPartecipazioni.remove(matricola);
+
+        ComunicazioneLezione co = new ComunicazioneLezione(partecipazione);
+        elencoComunicazioni.add(co);
     }
 
     public void creaElenchiAppello(){
@@ -126,6 +138,10 @@ public class Lezione {
 
     public Map<String, Partecipazione> getElencoPartecipazioni() {
         return elencoPartecipazioni;
+    }
+
+    public Insegnamento getInsegnamento() {
+        return insegnamento;
     }
 
     public void setElencoPartecipazioni(Map<String, Partecipazione> elencoPartecipazioni) {

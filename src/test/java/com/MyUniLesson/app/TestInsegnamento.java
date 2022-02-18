@@ -20,7 +20,7 @@ public class TestInsegnamento {
         //test che verifica il corretto funzionamento del metodo verificaDisponibilità
         Insegnamento i = new Insegnamento(1, "Ingegneria del Software", 9);
         Date d = new Date();
-        Lezione l1 = new Lezione(d, 2);
+        Lezione l1 = new Lezione(d, 2, i);
         List<Lezione> lezioneList = new LinkedList<Lezione>();
         lezioneList.add(l1);
         i.aggiungiLezione(lezioneList);
@@ -33,7 +33,7 @@ public class TestInsegnamento {
         //test che verifica l'inserimento della lezione
         Insegnamento i = new Insegnamento(1, "Ingegneria del Software", 9);
         Date d = new Date();
-        Lezione l1 = new Lezione(d, 2);
+        Lezione l1 = new Lezione(d, 2, i);
         List<Lezione> lezioneList = new LinkedList<Lezione>();
         lezioneList.add(l1);
         assertNotNull(i.getLezioniInsegnamento().contains(l1));

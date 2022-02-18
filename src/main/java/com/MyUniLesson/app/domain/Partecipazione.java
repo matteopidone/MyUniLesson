@@ -7,10 +7,12 @@ import java.util.Observable;
 public class Partecipazione extends Observable {
     private Studente studente;
     private StatoPartecipazione statoPartecipazione;
+    private Lezione lezione;
 
-    public Partecipazione(Studente studente) {
+    public Partecipazione(Studente studente, Lezione lezione) {
         this.studente = studente;
         this.statoPartecipazione= new StatoPendente(this);
+        this.lezione = lezione;
     }
 
     public void aggiornaPartecipazione(boolean presenza) throws Exception{
@@ -39,6 +41,10 @@ public class Partecipazione extends Observable {
 
     public StatoPartecipazione getStatoPartecipazione() {
         return statoPartecipazione;
+    }
+
+    public Lezione getLezione() {
+        return lezione;
     }
 
     @Override

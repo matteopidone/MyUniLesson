@@ -61,7 +61,7 @@ public class MyUniLesson {
             while ((str = bfStud.readLine()) != null) {
                 strings = str.split("-");
                 CorsoDiLaurea cdl = mapCdl.get(Integer.parseInt(strings[0]));
-                cdl.inserisciStudente(strings[1], new Studente(strings[1], strings[2], strings[3]));
+                cdl.inserisciStudente(strings[1], new Studente(strings[1], strings[2], strings[3], strings[4]));
 
             }
             elencoCdl = mapCdl;
@@ -110,7 +110,7 @@ public class MyUniLesson {
                 strings = str.split("-");
                 cdl= elencoCdl.get(Integer.parseInt(strings[0]));
                 i=cdl.getInsegnamenti().get(Integer.parseInt(strings[1]));
-                l= new Lezione(Integer.parseInt(strings[2]), new Date(Integer.parseInt(strings[3])-1900, Integer.parseInt(strings[4])-1, Integer.parseInt(strings[5]), Integer.parseInt(strings[6]), 0), Integer.parseInt(strings[7]));
+                l= new Lezione(Integer.parseInt(strings[2]), new Date(Integer.parseInt(strings[3])-1900, Integer.parseInt(strings[4])-1, Integer.parseInt(strings[5]), Integer.parseInt(strings[6]), 0), Integer.parseInt(strings[7]), i);
                 i.aggiungiLezione(l);
                 elencoLezioni.add(l);
             }

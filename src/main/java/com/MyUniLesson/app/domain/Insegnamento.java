@@ -29,7 +29,7 @@ public class Insegnamento {
         }
         do {
             if (verificaDisponibilita(data)) {
-                lezCorrente.add(new Lezione(data, durata));
+                lezCorrente.add(new Lezione(data, durata, this));
             } else {
                 System.out.println("Errore: Impossibile inserire la lezione di giorno " + data);
             }

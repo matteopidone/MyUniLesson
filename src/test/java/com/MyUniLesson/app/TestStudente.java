@@ -11,7 +11,7 @@ public class TestStudente {
     @Test
     public void testGetMatricola(){
         String matricola = "O46002170";
-        Studente s = new Studente(matricola, "Matteo", "Pidone");
+        Studente s = new Studente(matricola, "Matteo", "Pidone", null);
         assertEquals(matricola, s.getMatricola());
     }
 }

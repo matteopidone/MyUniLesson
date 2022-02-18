@@ -22,7 +22,7 @@ public class TestLezione {
         //test che verifica la corretta chiamata ai metodi
         try {
             Date d = new Date();
-            Lezione l = new Lezione(d, 1);
+            Lezione l = new Lezione(d, 1, null);
             l.aggiungiPartecipazione("O46002170");
             fail("Error test");
         }catch (MyUniLessonException m){
@@ -37,9 +37,9 @@ public class TestLezione {
     public void testPrenotazionePresente(){
         //test che verifica se viene inserita due volte la partecipazione di uno studente
         try {
-            Studente s = new Studente("O46002170", "Matteo", "Pidone");
+            Studente s = new Studente("O46002170", "Matteo", "Pidone", null);
             Date d = new Date();
-            Lezione l = new Lezione(d, 1);
+            Lezione l = new Lezione(d, 1, null);
             l.generaPartecipazione(s);
             l.aggiungiPartecipazione(s.getMatricola());
             l.generaPartecipazione(s);
@@ -56,8 +56,8 @@ public class TestLezione {
 
     @Test
     public void testSetElencoPresenti(){
-        Lezione l = new Lezione(new Date(), 1);
-        Studente s = new Studente("O46002170", "Matteo", "Pidone");
+        Lezione l = new Lezione(new Date(), 1, null);
+        Studente s = new Studente("O46002170", "Matteo", "Pidone", "pidonematteo@hotmail.it");
         try {
             l.generaPartecipazione(s);
             l.aggiungiPartecipazione(s.getMatricola());
@@ -78,8 +78,8 @@ public class TestLezione {
     public void testGetpCorrente(){
         //test che verifica il corretto funzionamento del metodo generaPartecipazione
         try {
-            Lezione l = new Lezione(new Date(), 1);
-            Studente s1 = new Studente("O46002170", "Matteo", "Pidone");
+            Lezione l = new Lezione(new Date(), 1, null);
+            Studente s1 = new Studente("O46002170", "Matteo", "Pidone", null);
             l.generaPartecipazione(s1);
             assertNotNull(l.getpCorrente());
         }catch (Exception e){

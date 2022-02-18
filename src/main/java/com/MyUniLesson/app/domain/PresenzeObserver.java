@@ -1,5 +1,6 @@
 package com.MyUniLesson.app.domain;
 
+import javax.mail.MessagingException;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -11,13 +12,17 @@ public class PresenzeObserver implements Observer {
     }
 
     @Override
-    public void update(Observable o, Object arg){
+    public void update(Observable o, Object arg) {
         Partecipazione p=(Partecipazione) o;
         String matricola= p.getMatricolaStudente();
         if(p.getStatoPartecipazione().getClass()==StatoPresente.class){
             lezione.registraPresenza(matricola, p);
         }else if(p.getStatoPartecipazione().getClass()==StatoAssente.class){
-            lezione.registraAssenza(matricola, p);
+            try {
+                lezione.registraAssenza(matricola, p);
+            }catch (MessagingException e){
+                System.out.println("Mail non inviata  a " + p.getMatricolaStudente());
+            }
         }
     }
 }
