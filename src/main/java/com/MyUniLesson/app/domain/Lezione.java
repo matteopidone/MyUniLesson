@@ -165,12 +165,17 @@ public class Lezione {
         return elencoPartecipazioni;
     }
 
+
     public Insegnamento getInsegnamento() {
         return insegnamento;
     }
 
     public void setElencoPartecipazioni(Map<String, Partecipazione> elencoPartecipazioni) {
         this.elencoPartecipazioni = elencoPartecipazioni;
+    }
+
+    public List<ComunicazioneLezione> getElencoComunicazioni() {
+        return elencoComunicazioni;
     }
 
     public void setAppello(boolean appello) {

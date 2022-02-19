@@ -18,4 +18,12 @@ public class ComunicazioneLezione {
     public void invia() throws MessagingException {
         formato.inviaMail(partecipazione);
     }
+
+    public Partecipazione getPartecipazione() {
+        return partecipazione;
+    }
+
+    public FormatoMail getFormato() {
+        return formato;
+    }
 }

@@ -31,8 +31,7 @@ public class MyUniLesson {
     }
 
     public static MyUniLesson getInstance() {
-        if (myUniLesson == null)
-            myUniLesson = new MyUniLesson();
+        if (myUniLesson == null) myUniLesson = new MyUniLesson();
         return myUniLesson;
     }
 
@@ -170,7 +169,14 @@ public class MyUniLesson {
 
     public void confermaInserimento() throws LezioneException {
         elencoLezioni.addAll(cdlSelezionato.confermaLezioni());
-        //deseleziona();
+        cdlSelezionato.getInsSelezionato().setLezCorrente(null);
+
+    }
+
+    public void terminaInserimento() {
+        cdlSelezionato.setInsSelezionato(null);
+        cdlSelezionato = null;
+
     }
 
     //UC2
@@ -202,7 +208,10 @@ public class MyUniLesson {
         String matricola = cdlSelezionato.getMatricolaStudenteSelezionato();
         lezioneSelezionata.aggiungiPartecipazione(matricola);
         System.out.println("Partecipazione Confermata ! ");
-        //deseleziona();
+
+        cdlSelezionato.setStudenteSelezionato(null);
+        lezioneSelezionata = null;
+        cdlSelezionato = null;
     }
 
     //UC5
@@ -219,6 +228,9 @@ public class MyUniLesson {
         }
         lezioneSelezionata.comunicaAnnullamento();
         lezioneSelezionata.setAnnullata(true);
+
+        docenteSelezionato = null;
+        lezioneSelezionata = null;
     }
 
     // UC6
@@ -256,6 +268,9 @@ public class MyUniLesson {
     public void terminaAppello() {
         lezioneSelezionata.setElencoPartecipazioni(null);
         lezioneSelezionata.setAppello(true);
+
+        docenteSelezionato = null;
+        lezioneSelezionata = null;
     }
 
     public void inserisciPresenza(Studente studente, boolean presenza) throws Exception {
@@ -268,23 +283,12 @@ public class MyUniLesson {
         return elencoLezioni;
     }
 
-    public int getPresenti() {
-        return lezioneSelezionata.getElencoPresenze().size();
-    }
-
-    public int getAssenti() {
-        return lezioneSelezionata.getElencoAssenze().size();
-    }
 
     public Map<Integer, Docente> getElencoDocenti() {
         return elencoDocenti;
     }
 
-    // Others
-
-    /* public void deseleziona() {
-        cdlSelezionato.deseleziona();
-        cdlSelezionato = null;
-        lezioneSelezionata = null;
-    }*/
+    public Map<Integer, CorsoDiLaurea> getElencoCdl() {
+        return elencoCdl;
+    }
 }

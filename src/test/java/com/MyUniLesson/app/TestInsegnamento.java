@@ -2,6 +2,8 @@ package com.MyUniLesson.app;
 
 import com.MyUniLesson.app.domain.Insegnamento;
 import com.MyUniLesson.app.domain.Lezione;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -14,29 +16,42 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TestInsegnamento {
 
+    Insegnamento ins1;
+    Date d = new Date();
+    Lezione l1;
+
+    @BeforeEach
+    public void initTest() {
+        ins1 = new Insegnamento(1, "Ingegneria del Software", 9);
+        l1 = new Lezione(d, 2, ins1);
+    }
+
+    @AfterEach
+    public void clearTest() {
+        ins1 = null;
+        l1 = null;
+    }
+
+
     //UC2 Test
     @Test
-    public void testVerificaDisponiblilità(){
+    public void testVerificaDisponiblilità() {
         //test che verifica il corretto funzionamento del metodo verificaDisponibilità
-        Insegnamento i = new Insegnamento(1, "Ingegneria del Software", 9);
-        Date d = new Date();
-        Lezione l1 = new Lezione(d, 2, i);
+
         List<Lezione> lezioneList = new LinkedList<Lezione>();
         lezioneList.add(l1);
-        i.aggiungiLezione(lezioneList);
-        assertFalse(i.verificaDisponibilita(d));
+        ins1.aggiungiLezione(lezioneList);
+        assertFalse(ins1.verificaDisponibilita(d));
 
     }
 
     @Test
-    public void testAggiungiLezione(){
+    public void testAggiungiLezione() {
         //test che verifica l'inserimento della lezione
-        Insegnamento i = new Insegnamento(1, "Ingegneria del Software", 9);
-        Date d = new Date();
-        Lezione l1 = new Lezione(d, 2, i);
+
         List<Lezione> lezioneList = new LinkedList<Lezione>();
         lezioneList.add(l1);
-        assertNotNull(i.getLezioniInsegnamento().contains(l1));
+        assertNotNull(ins1.getLezioniInsegnamento().contains(l1));
 
     }
 }

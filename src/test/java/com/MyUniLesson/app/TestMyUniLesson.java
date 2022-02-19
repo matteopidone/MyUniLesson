@@ -14,17 +14,22 @@ import java.util.*;
 public class TestMyUniLesson {
 
     static MyUniLesson myUniLesson;
+    static CorsoDiLaurea cdl;
+    static Docente d;
+    static Insegnamento ins;
+    static Studente s1;
+    static Studente s2;
+
 
     @BeforeAll
     public static void initTest() {
 
         myUniLesson = MyUniLesson.getInstance();
-    }
-
-    @AfterEach
-    public void clearTest() {
-
-        //myUniLesson.deseleziona();
+        d = myUniLesson.getElencoDocenti().get(3);
+        cdl = myUniLesson.getElencoCdl().get(1);
+        ins = cdl.getInsegnamenti().get(3);
+        s1 = cdl.getElencoStudenti().get("O46002170");
+        s2 = cdl.getElencoStudenti().get("O46002200");
     }
 
     //UC1 Test
@@ -37,15 +42,13 @@ public class TestMyUniLesson {
             Date d1 = new Date(2022 - 1900, 1 - 1, 25, 10, 0);
             Date d2 = new Date(2022 - 1900, 1 - 1, 25, 15, 0);
 
-            myUniLesson.mostraInsegnamenti(1);
-            myUniLesson.selezionaInsegnamento(1);
+            myUniLesson.mostraInsegnamenti(cdl.getCodice());
+            myUniLesson.selezionaInsegnamento(ins.getCodice());
             myUniLesson.creaLezione(d1, 2, false);
             myUniLesson.confermaInserimento();
-
-            myUniLesson.mostraInsegnamenti(1);
-            myUniLesson.selezionaInsegnamento(1);
             myUniLesson.creaLezione(d2, 2, false);
             myUniLesson.confermaInserimento();
+            myUniLesson.terminaInserimento();
 
             int count = 0;
             boolean bool = false;
@@ -64,46 +67,45 @@ public class TestMyUniLesson {
     }
 
     @Test
-    public void testVerificaLezioniPrenotabili(){
+    public void testVerificaLezioniPrenotabili() {
         Lezione l1;
         Lezione l2;
-        Date d1 = new Date();
-        Date d2 = addDay(d1,7);
-        try{
-            myUniLesson.mostraInsegnamenti(1);
-            myUniLesson.selezionaInsegnamento(1);
+        //Date d1 = new Date();
+        //Date d2 = addDay(d1,7);
+        Date d1 = new Date(2022 - 1900, 2 - 1, 14, 13, 00);
+        Date d2 = new Date(2022 - 1900, 2 - 1, 21, 13, 00);
+        try {
+            myUniLesson.mostraInsegnamenti(cdl.getCodice());
+            myUniLesson.selezionaInsegnamento(ins.getCodice());
             myUniLesson.creaLezione(d1, 2, false);
             l1 = myUniLesson.getLezCorrente().get(0);
             myUniLesson.confermaInserimento();
-
-            myUniLesson.mostraInsegnamenti(1);
-            myUniLesson.selezionaInsegnamento(1);
             myUniLesson.creaLezione(d2, 2, false);
             l2 = myUniLesson.getLezCorrente().get(0);
             myUniLesson.confermaInserimento();
+            myUniLesson.terminaInserimento();
 
-            myUniLesson.identificaStudente("O46002170",1);
-            for(Insegnamento i: myUniLesson.mostraLezioniPrenotabili()){
+            myUniLesson.identificaStudente(s1.getMatricola(), cdl.getCodice());
+            for (Insegnamento i : myUniLesson.mostraLezioniPrenotabili()) {
 
-                if(i.getCodice() == 1){
-                    System.out.println("Insegnamento trovato");
+                if (i.getCodice() == 3) {
                     assertFalse(i.getLezioniInsegnamento().contains(l1));
                 }
             }
 
-        }catch(Exception e){
+        } catch (Exception e) {
             fail("Error Test");
         }
 
     }
 
     @Test
-    public void getLezioniRicorrenti(){
+    public void getLezioniRicorrenti() {
         //testiamo l'inserimento delle lezioni nel caso siano ricorrenti
 
         //supponiamo che si conosca la data di fine
         Date end;
-        Date data = new Date();
+        Date data = new Date(2022 - 1900, 4 - 1, 4, 13, 00);
         int count = 0;
         if (data.getMonth() > 5) {
             end = new Date(data.getYear(), Calendar.DECEMBER, 31);
@@ -111,10 +113,10 @@ public class TestMyUniLesson {
             end = new Date(data.getYear(), Calendar.JUNE, 30);
         }
         try {
-            myUniLesson.mostraInsegnamenti(1);
-            myUniLesson.selezionaInsegnamento(1);
+            myUniLesson.mostraInsegnamenti(cdl.getCodice());
+            myUniLesson.selezionaInsegnamento(ins.getCodice());
             myUniLesson.creaLezione(data, 2, true);
-            while (data.before(end)){
+            while (data.before(end)) {
                 count++;
 
                 Calendar calendar = Calendar.getInstance();
@@ -125,7 +127,7 @@ public class TestMyUniLesson {
             }
             assertEquals(count, myUniLesson.getLezCorrente().size());
 
-        }catch(Exception e){
+        } catch (Exception e) {
             fail("Unexpected exception");
         }
     }
@@ -137,24 +139,22 @@ public class TestMyUniLesson {
             //test che verifica se, dopo aver manifestato una partecipazione, la lezione non compare tra quelle disponibili
             //inserisco almeno due lezioni per evitare la propagazione di un'altra eccezione
 
-            myUniLesson.mostraInsegnamenti(1);
-            myUniLesson.selezionaInsegnamento(1);
-            myUniLesson.creaLezione(new Date(2022-1900, 2-1, 26, 10, 00), 2, false);
+            myUniLesson.mostraInsegnamenti(cdl.getCodice());
+            myUniLesson.selezionaInsegnamento(ins.getCodice());
+            myUniLesson.creaLezione(new Date(2022 - 1900, 2 - 1, 15, 10, 00), 2, false);
             Lezione lezione = myUniLesson.getLezCorrente().get(0);
             myUniLesson.confermaInserimento();
-
-            myUniLesson.mostraInsegnamenti(1);
-            myUniLesson.selezionaInsegnamento(1);
-            myUniLesson.creaLezione(new Date(2022-1900, 2-1, 24, 14,00), 2, false);
+            myUniLesson.creaLezione(new Date(2022 - 1900, 2 - 1, 22, 14, 00), 2, false);
             myUniLesson.confermaInserimento();
+            myUniLesson.terminaInserimento();
 
-            myUniLesson.identificaStudente("O46002170", 1);
+            myUniLesson.identificaStudente(s1.getMatricola(), cdl.getCodice());
             System.out.println(myUniLesson.mostraLezioniPrenotabili());
             myUniLesson.creaPartecipazione(lezione.getCodice());
             myUniLesson.confermaPartecipazione();
 
 
-            myUniLesson.identificaStudente("O46002170", 1);
+            myUniLesson.identificaStudente(s1.getMatricola(), cdl.getCodice());
             for (Insegnamento i : myUniLesson.mostraLezioniPrenotabili()) {
 
                 if (i.getCodice() == 1) {
@@ -169,39 +169,39 @@ public class TestMyUniLesson {
 
     //UC6 Test
     @Test
-    public void testModificaStatoPartecipazione(){
+    public void testModificaStatoPartecipazione() {
         try {
 
-            Date d1 = new Date(2022 - 1900, 2 - 1, 22, 10, 0);
+            Date d1 = new Date(2022 - 1900, 2 - 1, 23, 10, 0);
 
-            myUniLesson.mostraInsegnamenti(1);
-            myUniLesson.selezionaInsegnamento(1);
+            myUniLesson.mostraInsegnamenti(cdl.getCodice());
+            myUniLesson.selezionaInsegnamento(ins.getCodice());
             myUniLesson.creaLezione(d1, 2, false);
-            myUniLesson.confermaInserimento();
             Lezione lezione = myUniLesson.getLezCorrente().get(0);
+            myUniLesson.confermaInserimento();
+            myUniLesson.terminaInserimento();
 
-            myUniLesson.identificaStudente("O46002170", 1);
+            myUniLesson.identificaStudente(s1.getMatricola(), cdl.getCodice());
             System.out.println(myUniLesson.mostraLezioniPrenotabili());
             myUniLesson.creaPartecipazione(lezione.getCodice());
             myUniLesson.confermaPartecipazione();
 
-            myUniLesson.identificaStudente("O46002200", 1);
+            myUniLesson.identificaStudente(s2.getMatricola(), cdl.getCodice());
             System.out.println(myUniLesson.mostraLezioniPrenotabili());
             myUniLesson.creaPartecipazione(lezione.getCodice());
             myUniLesson.confermaPartecipazione();
 
-            myUniLesson.identificaDocente(1);
-            Map<Integer, Insegnamento> elencoInsegnamenti= myUniLesson.cercaInsegnamenti();
-            List<Lezione> elencoLezioni= myUniLesson.cercaLezioni(1);
-            List<Studente> elencoStudenti= myUniLesson.iniziaAppello(lezione.getCodice());
+            myUniLesson.identificaDocente(d.getCodice());
+            Map<Integer, Insegnamento> elencoInsegnamenti = myUniLesson.cercaInsegnamenti();
+            List<Lezione> elencoLezioni = myUniLesson.cercaLezioni(ins.getCodice());
+            List<Studente> elencoStudenti = myUniLesson.iniziaAppello(lezione.getCodice());
 
             myUniLesson.inserisciPresenza(elencoStudenti.get(0), true);
             myUniLesson.inserisciPresenza(elencoStudenti.get(1), false);
             myUniLesson.terminaAppello();
 
-            System.out.println("Ci sono "+myUniLesson.getPresenti()+" studenti presenti e "+myUniLesson.getAssenti()+" studenti assenti.");     //Per vedere quanti alunni presenti o assenti ha inserito nelle apposite liste.
 
-            assertEquals(1, myUniLesson.getPresenti());
+            assertEquals(1, lezione.getElencoPresenze().size());
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -212,10 +212,9 @@ public class TestMyUniLesson {
         try {
             myUniLesson.identificaDocente(9999); //docente che non esiste nel sistema
             fail("Docente trovato.");
-        }catch (DocentiException m){
+        } catch (DocentiException m) {
             assertNotNull(m);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             fail("Error Test");
         }
     }
@@ -223,46 +222,93 @@ public class TestMyUniLesson {
     @Test
     public void TestEsistenzaLezione() {
         try {
-            myUniLesson.identificaDocente(1);
-            myUniLesson.cercaLezioni(1);
+            myUniLesson.identificaDocente(d.getCodice());
+            myUniLesson.cercaLezioni(ins.getCodice());
             myUniLesson.iniziaAppello(1); //lezione che non esiste nell'insegnamento
 
             fail("Lezione trovata.");
-        }catch (LezioneException l){
+        } catch (LezioneException l) {
             assertNotNull(l);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             fail("Error Test");
         }
     }
 
     @Test
-    public void testSetElencoPartecipazioniNull(){
+    public void testSetElencoPartecipazioniNull() {
         try {
             Lezione l = null;
-            myUniLesson.identificaDocente(1);
+            myUniLesson.identificaDocente(cdl.getCodice());
             List<Lezione> elencoLezioni = myUniLesson.cercaLezioni(1);
 
-            for(Lezione l1: elencoLezioni) {
-                if(l1.getCodice() == 207465127){ //lezione che è presente nel sistema (vedi file Lezioni.txt)
+            for (Lezione l1 : elencoLezioni) {
+                if (l1.getCodice() == 207465127) { //lezione che è presente nel sistema (vedi file Lezioni.txt)
                     l = l1;
                     break;
                 }
 
             }
             List<Studente> elencoStudenti = myUniLesson.iniziaAppello(l.getCodice());
-            for(Studente s: elencoStudenti){
+            for (Studente s : elencoStudenti) {
                 myUniLesson.inserisciPresenza(s, true);
 
             }
             myUniLesson.terminaAppello();
             assertNull(l.getElencoPartecipazioni());
 
-        }catch(Exception e){
+        } catch (Exception e) {
             fail("Test fail ");
         }
     }
-    private Date addDay(Date start, int amount){
+
+    @Test
+    public void getLezioniAnnullabili() {
+        //test che verifica la comparsa di una lezione successiva alla data di oggi tra quelle annullabili
+        try {
+            myUniLesson.mostraInsegnamenti(cdl.getCodice());
+            myUniLesson.selezionaInsegnamento(ins.getCodice());
+            myUniLesson.creaLezione(new Date(2022 - 1900, 4 - 1, 12, 12, 00), 2, false);
+            Lezione l = myUniLesson.getLezCorrente().get(0);
+            myUniLesson.confermaInserimento();
+            myUniLesson.terminaInserimento();
+
+            myUniLesson.identificaDocente(d.getCodice());
+            List<Lezione> lez = myUniLesson.cercaProssimeLezioni(ins.getCodice());
+            assertTrue(lez.contains(l));
+
+
+        } catch (Exception e) {
+            fail("error test");
+        }
+
+    }
+
+    @Test
+    public void testLezioneAnnullabile() {
+        //test che dopo l'annullamento di una lezione, essa non sia più presente tra quelle annullabili
+        try {
+            myUniLesson.mostraInsegnamenti(cdl.getCodice());
+            myUniLesson.selezionaInsegnamento(ins.getCodice());
+            myUniLesson.creaLezione(new Date(2022 - 1900, 4 - 1, 13, 12, 00), 2, false);
+            Lezione l = myUniLesson.getLezCorrente().get(0);
+            myUniLesson.confermaInserimento();
+            myUniLesson.terminaInserimento();
+
+            myUniLesson.identificaDocente(d.getCodice());
+            myUniLesson.cercaProssimeLezioni(ins.getCodice());
+            myUniLesson.annullaLezione(l.getCodice());
+
+            myUniLesson.identificaDocente(d.getCodice());
+            List<Lezione> lez = myUniLesson.cercaProssimeLezioni(ins.getCodice());
+            assertFalse(lez.contains(l));
+
+        } catch (Exception e) {
+            fail("error test");
+        }
+
+    }
+
+    private Date addDay(Date start, int amount) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(start);
         calendar.add(Calendar.DATE, amount);

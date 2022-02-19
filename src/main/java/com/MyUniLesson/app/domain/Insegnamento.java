@@ -58,7 +58,7 @@ public class Insegnamento {
         return lezCorrente;
     }
 
-    private Date addDay(Date start, int amount){
+    private Date addDay(Date start, int amount) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(start);
         calendar.add(Calendar.DATE, amount);
@@ -67,15 +67,17 @@ public class Insegnamento {
 
     public List<Lezione> cercaLezioniPrenotabili(String matricola) {
         Date start = new Date();
+        start.setHours(6);
         Date end;
         List<Lezione> elencoLezioniPrenotabili = new LinkedList<Lezione>();
 
-        do{
+        do {
             start = addDay(start, 1);
 
-        }while(start.getDay() != 1);
+        } while (start.getDay() != 1);
 
         end = addDay(start, 4);
+        end.setHours(23);
 
 
         for (Lezione l : lezioniInsegnamento) {
@@ -86,22 +88,22 @@ public class Insegnamento {
         return elencoLezioniPrenotabili;
     }
 
-    public List<Lezione> cercaLezioni(){
-        List<Lezione> elencoLezioni= new LinkedList<Lezione>();
-        Date today= new Date();
-        for(Lezione l : lezioniInsegnamento){
-            if(l.getData().before(today) && !l.isAppello() &&!l.isAnnullata()){               //verifica la data e che l'appello non sia stato fatto (!appello= !false=true)
+    public List<Lezione> cercaLezioni() {
+        List<Lezione> elencoLezioni = new LinkedList<Lezione>();
+        Date today = new Date();
+        for (Lezione l : lezioniInsegnamento) {
+            if (l.getData().before(today) && !l.isAppello() && !l.isAnnullata()) {               //verifica la data e che l'appello non sia stato fatto (!appello= !false=true)
                 elencoLezioni.add(l);
             }
         }
         return elencoLezioni;
     }
 
-    public List<Lezione> cercaProssimeLezioni(){
-        List<Lezione> elencoLezioni= new LinkedList<Lezione>();
-        Date today= new Date();
-        for(Lezione l : lezioniInsegnamento){
-            if(l.getData().after(today) && !l.isAppello() && !l.isAnnullata()){
+    public List<Lezione> cercaProssimeLezioni() {
+        List<Lezione> elencoLezioni = new LinkedList<Lezione>();
+        Date today = new Date();
+        for (Lezione l : lezioniInsegnamento) {
+            if (l.getData().after(today) && !l.isAppello() && !l.isAnnullata()) {
                 elencoLezioni.add(l);
             }
         }
@@ -115,7 +117,9 @@ public class Insegnamento {
         return codice;
     }
 
-    public List<Lezione> getLezCorrente(){ return lezCorrente; }
+    public List<Lezione> getLezCorrente() {
+        return lezCorrente;
+    }
 
     public String getNome() {
         return nome;
@@ -137,18 +141,12 @@ public class Insegnamento {
         this.lezioniInsegnamento.add(lezione);
     }
 
-    // Others
-
-    public void deseleziona() {
-        lezCorrente = null;
+    public void setLezCorrente(List<Lezione> lezCorrente) {
+        this.lezCorrente = lezCorrente;
     }
 
     @Override
     public String toString() {
-        return "Insegnamento{" +
-                "codice=" + codice +
-                ", nome='" + nome + '\'' +
-                ", CFU=" + CFU +
-                "}";
+        return "Insegnamento{" + "codice=" + codice + ", nome='" + nome + '\'' + ", CFU=" + CFU + "}";
     }
 }

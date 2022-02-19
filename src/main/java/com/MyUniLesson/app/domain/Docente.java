@@ -41,6 +41,10 @@ public class Docente {
         this.elencoInsErogati.put(i.getCodice(), i);
     }
 
+    public int getCodice() {
+        return codice;
+    }
+
     @Override
     public String toString() {
         return "Docente{" +

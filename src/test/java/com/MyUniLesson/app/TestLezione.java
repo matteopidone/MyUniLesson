@@ -1,14 +1,15 @@
 package com.MyUniLesson.app;
 
 
-import com.MyUniLesson.app.domain.Lezione;
-import com.MyUniLesson.app.domain.Partecipazione;
-import com.MyUniLesson.app.domain.Studente;
+import com.MyUniLesson.app.domain.*;
 import com.MyUniLesson.app.exception.MyUniLessonException;
 import com.MyUniLesson.app.exception.PartecipazioneException;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.mail.MessagingException;
 import java.util.Date;
 
 
@@ -16,58 +17,72 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestLezione {
 
+
+    Insegnamento ins1;
+    Date d = new Date();
+    Lezione l1;
+    Studente s1;
+
+
+    @BeforeEach
+    public void initTest() {
+        ins1 = new Insegnamento(1, "Ingegneria del Software", 9);
+        l1 = new Lezione(d, 1, ins1);
+        s1 = new Studente("O46002191", "Tomas", "Prifti", "tomasprifti99@gmail.com");
+    }
+
+    @AfterEach
+    public void clearTest() {
+        ins1 = null;
+        l1 = null;
+        s1 = null;
+    }
+
+
     //UC2 Test
     @Test
-    public void testAggiungiPartecipazione(){
+    public void testAggiungiPartecipazione() {
         //test che verifica la corretta chiamata ai metodi
         try {
-            Date d = new Date();
-            Lezione l = new Lezione(d, 1, null);
-            l.aggiungiPartecipazione("O46002170");
+            l1.aggiungiPartecipazione(s1.getMatricola());
             fail("Error test");
-        }catch (MyUniLessonException m){
+        } catch (MyUniLessonException m) {
             assertNotNull(m);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             fail("Error Test");
         }
     }
 
     @Test
-    public void testPrenotazionePresente(){
+    public void testPrenotazionePresente() {
         //test che verifica se viene inserita due volte la partecipazione di uno studente
         try {
-            Studente s = new Studente("O46002170", "Matteo", "Pidone", null);
-            Date d = new Date();
-            Lezione l = new Lezione(d, 1, null);
-            l.generaPartecipazione(s);
-            l.aggiungiPartecipazione(s.getMatricola());
-            l.generaPartecipazione(s);
-            l.aggiungiPartecipazione(s.getMatricola());
+            ;
+            l1.generaPartecipazione(s1);
+            l1.aggiungiPartecipazione(s1.getMatricola());
+            l1.generaPartecipazione(s1);
+            l1.aggiungiPartecipazione(s1.getMatricola());
             fail("Error test");
-        }catch (PartecipazioneException p){
+        } catch (PartecipazioneException p) {
             assertNotNull(p);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             fail("Error Test");
 
         }
     }
 
     @Test
-    public void testSetElencoPresenti(){
-        Lezione l = new Lezione(new Date(), 1, null);
-        Studente s = new Studente("O46002170", "Matteo", "Pidone", "pidonematteo@hotmail.it");
+    public void testSetElencoPresenti() {
         try {
-            l.generaPartecipazione(s);
-            l.aggiungiPartecipazione(s.getMatricola());
-            Partecipazione p = l.getElencoPartecipazioni().get(s.getMatricola());
+            l1.generaPartecipazione(s1);
+            l1.aggiungiPartecipazione(s1.getMatricola());
+            Partecipazione p = l1.getElencoPartecipazioni().get(s1.getMatricola());
 
-            l.creaElenchiAppello();
-            l.inserisciPresenza(s, true);
-            assertTrue(l.getElencoPresenze().containsValue(p));
+            l1.creaElenchiAppello();
+            l1.inserisciPresenza(s1, true);
+            assertTrue(l1.getElencoPresenze().containsValue(p));
 
-        }catch(Exception e){
+        } catch (Exception e) {
             fail("Test fail ");
         }
     }
@@ -75,15 +90,53 @@ public class TestLezione {
 
     //cercaLezioni
     @Test
-    public void testGetpCorrente(){
+    public void testGetpCorrente() {
         //test che verifica il corretto funzionamento del metodo generaPartecipazione
         try {
-            Lezione l = new Lezione(new Date(), 1, null);
-            Studente s1 = new Studente("O46002170", "Matteo", "Pidone", null);
-            l.generaPartecipazione(s1);
-            assertNotNull(l.getpCorrente());
-        }catch (Exception e){
-           fail("Unexpected Exception");
+            l1.generaPartecipazione(s1);
+            assertNotNull(l1.getpCorrente());
+        } catch (Exception e) {
+            fail("Unexpected Exception");
+        }
+    }
+
+    @Test
+    public void testRegistraAssenza() {
+        //con questo test viene verificato sia la creazione della comunicazione, sia il corretto formato della mail
+        try {
+            l1.generaPartecipazione(s1);
+            Partecipazione p = l1.getpCorrente();
+            l1.aggiungiPartecipazione(s1.getMatricola());
+            l1.creaElenchiAppello();
+            l1.registraAssenza(s1.getMatricola(), p);
+            for (ComunicazioneLezione c : l1.getElencoComunicazioni()) {
+                if (c.getPartecipazione() == p) {
+                    assertEquals(c.getFormato().getClass(), AssenteStrategy.class);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            fail("Error Test " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testRegistraAnnullamento() {
+        //con questo test viene verificato sia la creazione della comunicazione, sia il corretto formato della mail
+        try {
+            l1.generaPartecipazione(s1);
+            Partecipazione p = l1.getpCorrente();
+            l1.aggiungiPartecipazione(s1.getMatricola());
+
+            l1.comunicaAnnullamento();
+            for (ComunicazioneLezione c : l1.getElencoComunicazioni()) {
+                if (c.getPartecipazione() == p) {
+                    assertEquals(c.getFormato().getClass(), AnnullamentoStrategy.class);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            fail("Error Test " + e.getMessage());
         }
     }
 }

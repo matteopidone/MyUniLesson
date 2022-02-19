@@ -109,12 +109,18 @@ public class CorsoDiLaurea {
         return elencoStudenti;
     }
 
-    // Others
-
-    public void deseleziona() {
-        insSelezionato.deseleziona();
-        insSelezionato = null;
+    public Insegnamento getInsSelezionato() {
+        return insSelezionato;
     }
+
+    public void setInsSelezionato(Insegnamento insSelezionato) {
+        this.insSelezionato = insSelezionato;
+    }
+
+    public void setStudenteSelezionato(Studente studenteSelezionato) {
+        this.studenteSelezionato = studenteSelezionato;
+    }
+
 
     @Override
     public String toString() {

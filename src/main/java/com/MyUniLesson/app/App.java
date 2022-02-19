@@ -77,8 +77,7 @@ public class App {
                             continua = tastiera.readLine().charAt(0);
 
                         } while (continua == 's');
-
-                        System.out.println(myUniLesson.getElencoLezioni()); //inserito per confermare l'inserimento
+                        myUniLesson.terminaInserimento();
                     } catch (Exception e) {
                         System.out.println("ERRORE: " + e.getMessage());
                     } finally {
@@ -113,34 +112,33 @@ public class App {
                     }
 
                 case 3:
-                    try{
+                    try {
                         System.out.println("Inserisci il codice del docente: ");
                         int codiceDocente = Integer.parseInt(tastiera.readLine());
                         myUniLesson.identificaDocente(codiceDocente);
-                        Map<Integer, Insegnamento> elencoInsegnamenti= myUniLesson.cercaInsegnamenti();
-                        for(Map.Entry<Integer, Insegnamento> entry : elencoInsegnamenti.entrySet()){
+                        Map<Integer, Insegnamento> elencoInsegnamenti = myUniLesson.cercaInsegnamenti();
+                        for (Map.Entry<Integer, Insegnamento> entry : elencoInsegnamenti.entrySet()) {
                             System.out.println(entry.getValue() + "\n");
                         }
                         System.out.println("Inserisci il codice dell'insegnamento: ");
                         int codiceInsegnamento = Integer.parseInt(tastiera.readLine());
-                        List<Lezione> elencoLezioni= myUniLesson.cercaLezioni(codiceInsegnamento);
-                        for(Lezione l : elencoLezioni){
+                        List<Lezione> elencoLezioni = myUniLesson.cercaLezioni(codiceInsegnamento);
+                        for (Lezione l : elencoLezioni) {
                             System.out.println(l + "\n");
                         }
                         System.out.println("Inserisci il codice della lezione: ");
                         int codiceLezione = Integer.parseInt(tastiera.readLine());
-                        List<Studente> elencoStudenti= myUniLesson.iniziaAppello(codiceLezione);
-                        for(Studente s: elencoStudenti){
-                            System.out.println("Lo studente "+s+" e' presente? (true/false) ");
+                        List<Studente> elencoStudenti = myUniLesson.iniziaAppello(codiceLezione);
+                        for (Studente s : elencoStudenti) {
+                            System.out.println("Lo studente " + s + " e' presente? (true/false) ");
                             boolean presenza = Boolean.parseBoolean(tastiera.readLine());
-                            if(presenza==true)
+                            if (presenza == true)
                                 myUniLesson.inserisciPresenza(s, true);
                             else
                                 myUniLesson.inserisciPresenza(s, false);
                         }
                         myUniLesson.terminaAppello();
 
-                        System.out.println("Ci sono "+myUniLesson.getPresenti()+" studenti presenti e "+myUniLesson.getAssenti()+" studenti assenti.");     //Per vedere quanti alunni presenti o assenti ha inserito nelle apposite liste.
 
                     } catch (Exception e) {
                         System.out.println("ERRORE: " + e.getMessage());
@@ -148,22 +146,22 @@ public class App {
                         break;
                     }
                 case 4: {
-                    try{
+                    try {
                         System.out.println("Inserisci il codice del docente: ");
                         int codiceDocente = Integer.parseInt(tastiera.readLine());
                         myUniLesson.identificaDocente(codiceDocente);
-                        Map<Integer, Insegnamento> elencoInsegnamenti= myUniLesson.cercaInsegnamenti();
-                        for(Map.Entry<Integer, Insegnamento> entry : elencoInsegnamenti.entrySet()){
+                        Map<Integer, Insegnamento> elencoInsegnamenti = myUniLesson.cercaInsegnamenti();
+                        for (Map.Entry<Integer, Insegnamento> entry : elencoInsegnamenti.entrySet()) {
                             System.out.println(entry.getValue() + "\n");
                         }
                         System.out.println("Inserisci il codice dell'insegnamento: ");
                         int codiceInsegnamento = Integer.parseInt(tastiera.readLine());
-                        List<Lezione> elencoLezioni= myUniLesson.cercaProssimeLezioni(codiceInsegnamento);
-                        if(elencoLezioni.isEmpty()){
+                        List<Lezione> elencoLezioni = myUniLesson.cercaProssimeLezioni(codiceInsegnamento);
+                        if (elencoLezioni.isEmpty()) {
                             System.out.println("Non ci sono lezioni che si possono annullare\n\n");
                             break;
                         }
-                        for(Lezione l : elencoLezioni){
+                        for (Lezione l : elencoLezioni) {
                             System.out.println(l + "\n");
                         }
                         System.out.println("Inserisci il codice della lezione: ");
@@ -172,7 +170,7 @@ public class App {
                         myUniLesson.annullaLezione(codiceLezione);
                         System.out.println("Lezione annullata con successo, gli studenti prenotati sono stati avvisati\n\n");
 
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         System.out.println("ERRORE: " + e.getMessage());
                     } finally {
                         break;
