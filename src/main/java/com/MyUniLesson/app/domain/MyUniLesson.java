@@ -2,6 +2,7 @@ package com.MyUniLesson.app.domain;
 
 import com.MyUniLesson.app.exception.*;
 
+import javax.mail.MessagingException;
 import java.io.*;
 import java.util.*;
 
@@ -18,7 +19,7 @@ public class MyUniLesson {
     public MyUniLesson() { //Singleton
         this.elencoLezioni = new LinkedList<Lezione>();
         this.elencoCdl = new HashMap<Integer, CorsoDiLaurea>();
-        this.elencoDocenti= new HashMap<Integer, Docente>();
+        this.elencoDocenti = new HashMap<Integer, Docente>();
         loadCdl();
         loadDocenti();
         loadLezioni();
@@ -71,7 +72,7 @@ public class MyUniLesson {
         }
     }
 
-    public void loadDocenti(){
+    public void loadDocenti() {
         try {
             BufferedReader bfDocenti = new BufferedReader(new FileReader("Docenti.txt"));
             BufferedReader bfInsErogati = new BufferedReader(new FileReader("InsegnamentiErogati.txt"));
@@ -92,12 +93,12 @@ public class MyUniLesson {
             }
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             System.err.println("errore: " + e.getMessage());
         }
     }
 
-    public void loadLezioni(){
+    public void loadLezioni() {
         CorsoDiLaurea cdl;
         Insegnamento i;
         Lezione l;
@@ -108,18 +109,18 @@ public class MyUniLesson {
             String str;
             while ((str = bfLezioni.readLine()) != null) {
                 strings = str.split("-");
-                cdl= elencoCdl.get(Integer.parseInt(strings[0]));
-                i=cdl.getInsegnamenti().get(Integer.parseInt(strings[1]));
-                l= new Lezione(Integer.parseInt(strings[2]), new Date(Integer.parseInt(strings[3])-1900, Integer.parseInt(strings[4])-1, Integer.parseInt(strings[5]), Integer.parseInt(strings[6]), 0), Integer.parseInt(strings[7]), i);
+                cdl = elencoCdl.get(Integer.parseInt(strings[0]));
+                i = cdl.getInsegnamenti().get(Integer.parseInt(strings[1]));
+                l = new Lezione(Integer.parseInt(strings[2]), new Date(Integer.parseInt(strings[3]) - 1900, Integer.parseInt(strings[4]) - 1, Integer.parseInt(strings[5]), Integer.parseInt(strings[6]), 0), Integer.parseInt(strings[7]), i);
                 i.aggiungiLezione(l);
                 elencoLezioni.add(l);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             System.err.println("errore: " + e.getMessage());
         }
     }
 
-    public void loadPartecipazioni(){
+    public void loadPartecipazioni() {
         Studente s;
         try {
             BufferedReader bfPartecipazioni = new BufferedReader(new FileReader("Partecipazioni.txt"));
@@ -127,17 +128,17 @@ public class MyUniLesson {
             String str;
             while ((str = bfPartecipazioni.readLine()) != null) {
                 strings = str.split("-");
-                s=elencoCdl.get(Integer.parseInt(strings[1])).getElencoStudenti().get(strings[2]);            //Preleva lo studente
+                s = elencoCdl.get(Integer.parseInt(strings[1])).getElencoStudenti().get(strings[2]);            //Preleva lo studente
 
-                for(Lezione l : elencoLezioni){
-                    if(l.getCodice()== Integer.parseInt(strings[0])){
+                for (Lezione l : elencoLezioni) {
+                    if (l.getCodice() == Integer.parseInt(strings[0])) {
                         l.generaPartecipazione(s);
                         l.aggiungiPartecipazione(s.getMatricola());
                         break;
                     }
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             System.err.println("errore: " + e.getMessage());
         }
     }
@@ -204,44 +205,60 @@ public class MyUniLesson {
         //deseleziona();
     }
 
+    //UC5
+    public List<Lezione> cercaProssimeLezioni(int codiceInsegnamento) throws Exception {
+        return docenteSelezionato.cercaProssimeLezioni(codiceInsegnamento);
+    }
+
+    public void annullaLezione(int codiceLezione) throws MessagingException {
+        for (Lezione l : elencoLezioni) {
+            if (l.getCodice() == codiceLezione) {
+                lezioneSelezionata = l;
+                break;
+            }
+        }
+        lezioneSelezionata.comunicaAnnullamento();
+        lezioneSelezionata.setAnnullata(true);
+    }
+
     // UC6
 
-    public Map<Integer, Insegnamento> cercaInsegnamenti(){
+    public Map<Integer, Insegnamento> cercaInsegnamenti() {
         return docenteSelezionato.getInsegnamenti();
     }
 
-    public List<Lezione> cercaLezioni (int codiceInsegnamento) throws Exception {
+    public List<Lezione> cercaLezioni(int codiceInsegnamento) throws Exception {
         return docenteSelezionato.cercaLezioni(codiceInsegnamento);
     }
 
-    public void identificaDocente (int codiceDocente) throws Exception {
-        docenteSelezionato=elencoDocenti.get(codiceDocente);
-        if(docenteSelezionato==null){
+    public void identificaDocente(int codiceDocente) throws Exception {
+        docenteSelezionato = elencoDocenti.get(codiceDocente);
+        if (docenteSelezionato == null) {
             throw new DocentiException("Docente non trovato.");
         }
     }
 
     public List<Studente> iniziaAppello(int codiceLezione) throws Exception {
-        for(Lezione l : elencoLezioni){
-            if(l.getCodice()== codiceLezione){
-                lezioneSelezionata=l;
+        for (Lezione l : elencoLezioni) {
+            if (l.getCodice() == codiceLezione) {
+                lezioneSelezionata = l;
                 break;
             }
         }
 
-        if(lezioneSelezionata==null){
+        if (lezioneSelezionata == null) {
             throw new LezioneException("Lezione non trovata.");
         }
         lezioneSelezionata.creaElenchiAppello();
         return lezioneSelezionata.cercaStudenti();
     }
 
-    public void terminaAppello(){
+    public void terminaAppello() {
         lezioneSelezionata.setElencoPartecipazioni(null);
         lezioneSelezionata.setAppello(true);
     }
 
-    public void inserisciPresenza(Studente studente, boolean presenza) throws Exception{
+    public void inserisciPresenza(Studente studente, boolean presenza) throws Exception {
         lezioneSelezionata.inserisciPresenza(studente, presenza);
     }
 

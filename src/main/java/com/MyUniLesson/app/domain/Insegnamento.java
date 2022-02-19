@@ -90,12 +90,24 @@ public class Insegnamento {
         List<Lezione> elencoLezioni= new LinkedList<Lezione>();
         Date today= new Date();
         for(Lezione l : lezioniInsegnamento){
-            if(l.getData().before(today) && !l.isAppello()){               //verifica la data e che l'appello non sia stato fatto (!appello= !false=true)
+            if(l.getData().before(today) && !l.isAppello() &&!l.isAnnullata()){               //verifica la data e che l'appello non sia stato fatto (!appello= !false=true)
                 elencoLezioni.add(l);
             }
         }
         return elencoLezioni;
     }
+
+    public List<Lezione> cercaProssimeLezioni(){
+        List<Lezione> elencoLezioni= new LinkedList<Lezione>();
+        Date today= new Date();
+        for(Lezione l : lezioniInsegnamento){
+            if(l.getData().after(today) && !l.isAppello() && !l.isAnnullata()){
+                elencoLezioni.add(l);
+            }
+        }
+        return elencoLezioni;
+    }
+
 
     //Getters and Setters
 

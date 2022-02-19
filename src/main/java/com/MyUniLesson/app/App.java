@@ -1,6 +1,7 @@
 package com.MyUniLesson.app;
 
 import com.MyUniLesson.app.domain.*;
+import com.MyUniLesson.app.exception.StudenteException;
 
 import java.io.*;
 import java.util.*;
@@ -27,6 +28,7 @@ public class App {
                     "1. Inserisci Lezione\n" +
                     "2. Inserisci Partecipazione dello studente\n" +
                     "3. Fai l'Appello\n" +
+                    "4. Annulla lezione\n" +
                     "0. Esci");
             try {
                 scelta = Integer.parseInt(tastiera.readLine());
@@ -145,6 +147,38 @@ public class App {
                     } finally {
                         break;
                     }
+                case 4: {
+                    try{
+                        System.out.println("Inserisci il codice del docente: ");
+                        int codiceDocente = Integer.parseInt(tastiera.readLine());
+                        myUniLesson.identificaDocente(codiceDocente);
+                        Map<Integer, Insegnamento> elencoInsegnamenti= myUniLesson.cercaInsegnamenti();
+                        for(Map.Entry<Integer, Insegnamento> entry : elencoInsegnamenti.entrySet()){
+                            System.out.println(entry.getValue() + "\n");
+                        }
+                        System.out.println("Inserisci il codice dell'insegnamento: ");
+                        int codiceInsegnamento = Integer.parseInt(tastiera.readLine());
+                        List<Lezione> elencoLezioni= myUniLesson.cercaProssimeLezioni(codiceInsegnamento);
+                        if(elencoLezioni.isEmpty()){
+                            System.out.println("Non ci sono lezioni che si possono annullare\n\n");
+                            break;
+                        }
+                        for(Lezione l : elencoLezioni){
+                            System.out.println(l + "\n");
+                        }
+                        System.out.println("Inserisci il codice della lezione: ");
+                        int codiceLezione = Integer.parseInt(tastiera.readLine());
+                        System.out.println("Annullamento in corso. Attendere.");
+                        myUniLesson.annullaLezione(codiceLezione);
+                        System.out.println("Lezione annullata con successo, gli studenti prenotati sono stati avvisati\n\n");
+
+                    }catch (Exception e){
+                        System.out.println("ERRORE: " + e.getMessage());
+                    } finally {
+                        break;
+                    }
+
+                }
 
                 default:
                     System.out.println("Scelta non valida");

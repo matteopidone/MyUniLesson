@@ -17,6 +17,15 @@ public class Docente {
         return ins.cercaLezioni();
     }
 
+    public List<Lezione> cercaProssimeLezioni(int codiceInsegnamento) throws Exception {
+        Insegnamento ins= elencoInsErogati.get(codiceInsegnamento);
+        if(ins==null){
+            throw new InsegnamentoException("Insegnamento non trovato.");
+        }
+        return ins.cercaProssimeLezioni();
+    }
+
+
     public Docente(int codice, String nome, String cognome) {
         this.codice = codice;
         this.nome = nome;

@@ -13,6 +13,7 @@ public class Lezione {
     private Date data;
     private int durata;
     private boolean appello;
+    private boolean annullata;
     private Map<String, Partecipazione> elencoPartecipazioni;
     private Partecipazione pCorrente;
     private Map<String, Partecipazione> elencoAssenze;
@@ -27,6 +28,7 @@ public class Lezione {
         this.durata = durata;
         this.elencoPartecipazioni = new HashMap<String, Partecipazione>();
         this.appello=false;
+        this.annullata = false;
         this.presenzeObserver= new PresenzeObserver(this);
         this.elencoComunicazioni = new LinkedList<ComunicazioneLezione>();
         this.insegnamento = insegnamento;
@@ -38,6 +40,7 @@ public class Lezione {
         this.durata = durata;
         this.elencoPartecipazioni = new HashMap<String, Partecipazione>();
         this.appello=false;
+        this.annullata = false;
         this.presenzeObserver= new PresenzeObserver(this);
         this.elencoComunicazioni = new LinkedList<ComunicazioneLezione>();
         this.insegnamento = insegnamento;
@@ -83,6 +86,8 @@ public class Lezione {
         elencoPartecipazioni.remove(matricola);
 
         ComunicazioneLezione co = new ComunicazioneLezione(partecipazione);
+        co.setFormatoMail(new AssenteStrategy());
+        co.invia();
         elencoComunicazioni.add(co);
     }
 
@@ -103,6 +108,19 @@ public class Lezione {
         String matricola=studente.getMatricola();
         Partecipazione partecipazione= elencoPartecipazioni.get(matricola);
         partecipazione.aggiornaPartecipazione(presenza);
+    }
+
+    public void comunicaAnnullamento() throws MessagingException{
+        Partecipazione p;
+        ComunicazioneLezione co;
+        for(Map.Entry<String, Partecipazione> entry : elencoPartecipazioni.entrySet()){
+            p = entry.getValue();
+            co = new ComunicazioneLezione(p);
+            co.setFormatoMail(new AnnullamentoStrategy());
+            co.invia();
+            elencoComunicazioni.add(co);
+
+        }
     }
 
     //Getters and Setters
@@ -135,6 +153,13 @@ public class Lezione {
         return appello;
     }
 
+    public boolean isAnnullata() {
+        return annullata;
+    }
+
+    public void setAnnullata(boolean annullata) {
+        this.annullata = annullata;
+    }
 
     public Map<String, Partecipazione> getElencoPartecipazioni() {
         return elencoPartecipazioni;
