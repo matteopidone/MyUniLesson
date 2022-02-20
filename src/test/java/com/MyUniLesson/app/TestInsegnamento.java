@@ -32,17 +32,15 @@ public class TestInsegnamento {
         l1 = null;
     }
 
-
     //UC2 Test
     @Test
-    public void testVerificaDisponiblilità() {
+    public void testVerificaDisponibilita() {
         //test che verifica il corretto funzionamento del metodo verificaDisponibilità
 
         List<Lezione> lezioneList = new LinkedList<Lezione>();
         lezioneList.add(l1);
         ins1.aggiungiLezione(lezioneList);
         assertFalse(ins1.verificaDisponibilita(d));
-
     }
 
     @Test
@@ -52,6 +50,5 @@ public class TestInsegnamento {
         List<Lezione> lezioneList = new LinkedList<Lezione>();
         lezioneList.add(l1);
         assertNotNull(ins1.getLezioniInsegnamento().contains(l1));
-
     }
 }

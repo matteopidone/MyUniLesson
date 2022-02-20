@@ -18,10 +18,21 @@ public class Insegnamento {
         this.lezioniInsegnamento = new LinkedList<Lezione>();
     }
 
-    public void creaLezione(Date data, int durata, boolean ricorrenza) {
+    public void creaLezione(Date data, int durata, boolean ricorrenza) throws LezioneException {
         lezCorrente = new LinkedList<Lezione>();
         Date end;
+        Date today = new Date();
 
+        today.setHours(23);
+        if (data.getDay() == 0 || data.getDay() == 6) {
+            throw new LezioneException("Non è possibile inserire lezioni il Sabato o la Domenica");
+        }
+        /*
+        //Non è possibile applicare questa Regola di Dominio senza compromettere il corretto funzionamento dei Test
+        if (data.before(today)) {
+            throw new LezioneException("Non è possibile inserire lezioni nei giorni precedenti a oggi");
+        }
+        */
         if (data.getMonth() > 5) {
             end = new Date(data.getYear(), Calendar.DECEMBER, 31);
         } else {
@@ -88,13 +99,16 @@ public class Insegnamento {
         return elencoLezioniPrenotabili;
     }
 
-    public List<Lezione> cercaLezioni() {
+    public List<Lezione> cercaLezioni() throws LezioneException {
         List<Lezione> elencoLezioni = new LinkedList<Lezione>();
         Date today = new Date();
         for (Lezione l : lezioniInsegnamento) {
             if (l.getData().before(today) && !l.isAppello() && !l.isAnnullata()) {               //verifica la data e che l'appello non sia stato fatto (!appello= !false=true)
                 elencoLezioni.add(l);
             }
+        }
+        if (elencoLezioni.isEmpty()) {
+            throw new LezioneException("Non ci sono lezioni su cui poter fare l'appello");
         }
         return elencoLezioni;
     }

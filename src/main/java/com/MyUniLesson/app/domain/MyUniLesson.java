@@ -11,8 +11,8 @@ public class MyUniLesson {
     private Map<Integer, CorsoDiLaurea> elencoCdl;
     private List<Lezione> elencoLezioni;
     private CorsoDiLaurea cdlSelezionato;
-    private Lezione lezioneSelezionata;                     //Teoricamente dovresti deselezionarli alla fine
-    private Docente docenteSelezionato;                     //Teoricamente dovresti deselezionarli alla fine
+    private Lezione lezioneSelezionata;
+    private Docente docenteSelezionato;
     private Map<Integer, Docente> elencoDocenti;
 
 
@@ -159,12 +159,10 @@ public class MyUniLesson {
 
     public void selezionaInsegnamento(int codiceInsegnamento) throws InsegnamentoException {
         cdlSelezionato.cercaInsegnamenti(codiceInsegnamento);
-
     }
 
-    public void creaLezione(Date data, int durata, boolean ricorrenza) {
+    public void creaLezione(Date data, int durata, boolean ricorrenza) throws LezioneException {
         cdlSelezionato.creaLezione(data, durata, ricorrenza);
-
     }
 
     public void confermaInserimento() throws LezioneException {
@@ -181,8 +179,11 @@ public class MyUniLesson {
 
     //UC2
 
-    public boolean identificaStudente(String matricola, int codiceCdl) throws StudenteException {
+    public boolean identificaStudente(String matricola, int codiceCdl) throws Exception {
         cdlSelezionato = elencoCdl.get(codiceCdl);
+        if (cdlSelezionato == null) {
+            throw new CdlException("Corso di Laurea inserito non valido");
+        }
         return cdlSelezionato.cercaStudente(matricola);
     }
 
@@ -200,14 +201,12 @@ public class MyUniLesson {
         }
         if (lezioneSelezionata != null) {
             lezioneSelezionata.generaPartecipazione(cdlSelezionato.getStudenteSelezionato());
-            System.out.println("Partecipazione Creata ! ");
         }
     }
 
     public void confermaPartecipazione() throws Exception {
         String matricola = cdlSelezionato.getMatricolaStudenteSelezionato();
         lezioneSelezionata.aggiungiPartecipazione(matricola);
-        System.out.println("Partecipazione Confermata ! ");
 
         cdlSelezionato.setStudenteSelezionato(null);
         lezioneSelezionata = null;
@@ -215,11 +214,16 @@ public class MyUniLesson {
     }
 
     //UC5
+
+    public Map<Integer, Insegnamento> cercaInsegnamenti() {
+        return docenteSelezionato.getInsegnamenti();
+    }
+
     public List<Lezione> cercaProssimeLezioni(int codiceInsegnamento) throws Exception {
         return docenteSelezionato.cercaProssimeLezioni(codiceInsegnamento);
     }
 
-    public void annullaLezione(int codiceLezione) throws MessagingException {
+    public void annullaLezione(int codiceLezione) {
         for (Lezione l : elencoLezioni) {
             if (l.getCodice() == codiceLezione) {
                 lezioneSelezionata = l;
@@ -235,19 +239,15 @@ public class MyUniLesson {
 
     // UC6
 
-    public Map<Integer, Insegnamento> cercaInsegnamenti() {
-        return docenteSelezionato.getInsegnamenti();
-    }
-
-    public List<Lezione> cercaLezioni(int codiceInsegnamento) throws Exception {
-        return docenteSelezionato.cercaLezioni(codiceInsegnamento);
-    }
-
     public void identificaDocente(int codiceDocente) throws Exception {
         docenteSelezionato = elencoDocenti.get(codiceDocente);
         if (docenteSelezionato == null) {
             throw new DocentiException("Docente non trovato.");
         }
+    }
+
+    public List<Lezione> cercaLezioni(int codiceInsegnamento) throws Exception {
+        return docenteSelezionato.cercaLezioni(codiceInsegnamento);
     }
 
     public List<Studente> iniziaAppello(int codiceLezione) throws Exception {
@@ -262,7 +262,16 @@ public class MyUniLesson {
             throw new LezioneException("Lezione non trovata.");
         }
         lezioneSelezionata.creaElenchiAppello();
-        return lezioneSelezionata.cercaStudenti();
+
+        List<Studente> elencoStudenti =  lezioneSelezionata.cercaStudenti();
+        if(elencoStudenti.isEmpty()) {
+            throw new StudenteException("Non ci sono studenti prenotati a questa Lezione");
+        }
+        return elencoStudenti;
+    }
+
+    public void inserisciPresenza(Studente studente, boolean presenza) throws Exception {
+        lezioneSelezionata.inserisciPresenza(studente, presenza);
     }
 
     public void terminaAppello() {
@@ -273,16 +282,11 @@ public class MyUniLesson {
         lezioneSelezionata = null;
     }
 
-    public void inserisciPresenza(Studente studente, boolean presenza) throws Exception {
-        lezioneSelezionata.inserisciPresenza(studente, presenza);
-    }
-
     // Getters and Setters
 
     public List<Lezione> getElencoLezioni() {
         return elencoLezioni;
     }
-
 
     public Map<Integer, Docente> getElencoDocenti() {
         return elencoDocenti;

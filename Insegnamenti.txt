@@ -1,5 +1,7 @@
-1-1-Ingegneria del Software-9
-1-2-Sicurezza dei Sistemi Informativi-6
-2-1-Analisi Matematica III-9
-2-2-Misure Elettroniche-9
-1-3-Tecnologia dei Sistemi di Controllo-6
+1-20001-Ingegneria del Software-9
+1-20002-Sicurezza dei Sistemi Informativi-6
+2-20003-Analisi Matematica III-9
+2-20004-Misure Elettroniche-9
+1-20005-Tecnologia dei Sistemi di Controllo-6
+3-20006-Anatomia-12
+4-20007-Basi di Fisica-9

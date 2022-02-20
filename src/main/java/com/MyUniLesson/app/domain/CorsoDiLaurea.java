@@ -40,7 +40,7 @@ public class CorsoDiLaurea {
 
     }
 
-    public void creaLezione(Date data, int durata, boolean ricorrenza) {
+    public void creaLezione(Date data, int durata, boolean ricorrenza) throws LezioneException {
         insSelezionato.creaLezione(data, durata, ricorrenza);
     }
 

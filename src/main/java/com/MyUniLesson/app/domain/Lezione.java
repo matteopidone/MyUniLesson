@@ -2,13 +2,14 @@ package com.MyUniLesson.app.domain;
 
 import com.MyUniLesson.app.exception.MyUniLessonException;
 import com.MyUniLesson.app.exception.PartecipazioneException;
+
 import javax.mail.MessagingException;
 
 import static java.lang.Math.abs;
 
 import java.util.*;
 
-public class Lezione {
+public class Lezione implements Comparable<Lezione> {
     private int codice;
     private Date data;
     private int durata;
@@ -27,9 +28,9 @@ public class Lezione {
         this.data = data;
         this.durata = durata;
         this.elencoPartecipazioni = new HashMap<String, Partecipazione>();
-        this.appello=false;
+        this.appello = false;
         this.annullata = false;
-        this.presenzeObserver= new PresenzeObserver(this);
+        this.presenzeObserver = new PresenzeObserver(this);
         this.elencoComunicazioni = new LinkedList<ComunicazioneLezione>();
         this.insegnamento = insegnamento;
     }
@@ -39,12 +40,11 @@ public class Lezione {
         this.data = data;
         this.durata = durata;
         this.elencoPartecipazioni = new HashMap<String, Partecipazione>();
-        this.appello=false;
+        this.appello = false;
         this.annullata = false;
-        this.presenzeObserver= new PresenzeObserver(this);
+        this.presenzeObserver = new PresenzeObserver(this);
         this.elencoComunicazioni = new LinkedList<ComunicazioneLezione>();
         this.insegnamento = insegnamento;
-
     }
 
     public boolean nonDisponibile(Date data) {
@@ -61,7 +61,7 @@ public class Lezione {
     }
 
     public void generaPartecipazione(Studente studenteSelezionato) throws PartecipazioneException {
-        pCorrente = new Partecipazione(studenteSelezionato, this );
+        pCorrente = new Partecipazione(studenteSelezionato, this);
         if (pCorrente == null) throw new PartecipazioneException("Partecipazione non creata");
         pCorrente.addObserver(presenzeObserver);
     }
@@ -76,12 +76,12 @@ public class Lezione {
 
     }
 
-    public void registraPresenza(String matricola, Partecipazione partecipazione){
+    public void registraPresenza(String matricola, Partecipazione partecipazione) {
         elencoPresenze.put(matricola, partecipazione);
         elencoPartecipazioni.remove(matricola);
     }
 
-    public void registraAssenza(String matricola, Partecipazione partecipazione) throws MessagingException {
+    public void registraAssenza(String matricola, Partecipazione partecipazione) {
         elencoAssenze.put(matricola, partecipazione);
         elencoPartecipazioni.remove(matricola);
 
@@ -91,29 +91,30 @@ public class Lezione {
         elencoComunicazioni.add(co);
     }
 
-    public void creaElenchiAppello(){
-        elencoAssenze= new HashMap<String, Partecipazione>();
-        elencoPresenze= new HashMap<String, Partecipazione>();
+    public void creaElenchiAppello() {
+        elencoAssenze = new HashMap<String, Partecipazione>();
+        elencoPresenze = new HashMap<String, Partecipazione>();
     }
 
-    public List<Studente> cercaStudenti(){
-        List<Studente> elencoStudenti= new LinkedList<Studente>(){};
-        for(Map.Entry<String, Partecipazione> entry : elencoPartecipazioni.entrySet()){
+    public List<Studente> cercaStudenti() {
+        List<Studente> elencoStudenti = new LinkedList<Studente>() {
+        };
+        for (Map.Entry<String, Partecipazione> entry : elencoPartecipazioni.entrySet()) {
             elencoStudenti.add(entry.getValue().getStudente());
         }
         return elencoStudenti;
     }
 
-    public void inserisciPresenza (Studente studente, boolean presenza) throws Exception{
-        String matricola=studente.getMatricola();
-        Partecipazione partecipazione= elencoPartecipazioni.get(matricola);
+    public void inserisciPresenza(Studente studente, boolean presenza) throws Exception {
+        String matricola = studente.getMatricola();
+        Partecipazione partecipazione = elencoPartecipazioni.get(matricola);
         partecipazione.aggiornaPartecipazione(presenza);
     }
 
-    public void comunicaAnnullamento() throws MessagingException{
+    public void comunicaAnnullamento() {
         Partecipazione p;
         ComunicazioneLezione co;
-        for(Map.Entry<String, Partecipazione> entry : elencoPartecipazioni.entrySet()){
+        for (Map.Entry<String, Partecipazione> entry : elencoPartecipazioni.entrySet()) {
             p = entry.getValue();
             co = new ComunicazioneLezione(p);
             co.setFormatoMail(new AnnullamentoStrategy());
@@ -191,4 +192,10 @@ public class Lezione {
                 "}" +
                 "}";
     }
+
+    @Override
+    public int compareTo(Lezione lezione) {
+        return this.getData().compareTo(lezione.getData());
+    }
+
 }

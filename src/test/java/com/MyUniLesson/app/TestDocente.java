@@ -25,8 +25,8 @@ public class TestDocente {
     public void TestTrovaInsegnamento() {
         Docente d;
         try {
-            d = myUniLesson.getElencoDocenti().get(1);
-            d.cercaLezioni(9999);
+            d = myUniLesson.getElencoDocenti().get(10001);
+            d.cercaLezioni(1);
             fail("Insegnamento trovato.");
         } catch (InsegnamentoException l) {
             assertNotNull(l);

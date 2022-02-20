@@ -1,2 +1,4 @@
 1-Ingegneria Informatica
 2-Ingegneria Elettronica
+3-Medicina
+4-Fisica

@@ -8,9 +8,6 @@ import org.junit.jupiter.api.*;
 
 import java.util.*;
 
-/**
- * Unit test for simple App.
- */
 public class TestMyUniLesson {
 
     static MyUniLesson myUniLesson;
@@ -25,9 +22,9 @@ public class TestMyUniLesson {
     public static void initTest() {
 
         myUniLesson = MyUniLesson.getInstance();
-        d = myUniLesson.getElencoDocenti().get(3);
+        d = myUniLesson.getElencoDocenti().get(10003);
         cdl = myUniLesson.getElencoCdl().get(1);
-        ins = cdl.getInsegnamenti().get(3);
+        ins = cdl.getInsegnamenti().get(20005);
         s1 = cdl.getElencoStudenti().get("O46002170");
         s2 = cdl.getElencoStudenti().get("O46002200");
     }
@@ -70,8 +67,6 @@ public class TestMyUniLesson {
     public void testVerificaLezioniPrenotabili() {
         Lezione l1;
         Lezione l2;
-        //Date d1 = new Date();
-        //Date d2 = addDay(d1,7);
         Date d1 = new Date(2022 - 1900, 2 - 1, 14, 13, 00);
         Date d2 = new Date(2022 - 1900, 2 - 1, 21, 13, 00);
         try {
@@ -200,6 +195,7 @@ public class TestMyUniLesson {
             myUniLesson.inserisciPresenza(elencoStudenti.get(1), false);
             myUniLesson.terminaAppello();
 
+            Thread.sleep(5000); //Aspetto che finiscano i Threads
 
             assertEquals(1, lezione.getElencoPresenze().size());
         } catch (Exception e) {
@@ -210,7 +206,7 @@ public class TestMyUniLesson {
     @Test
     public void TestEsistenzaDocenti() {
         try {
-            myUniLesson.identificaDocente(9999); //docente che non esiste nel sistema
+            myUniLesson.identificaDocente(1); //docente che non esiste nel sistema
             fail("Docente trovato.");
         } catch (DocentiException m) {
             assertNotNull(m);
@@ -238,11 +234,11 @@ public class TestMyUniLesson {
     public void testSetElencoPartecipazioniNull() {
         try {
             Lezione l = null;
-            myUniLesson.identificaDocente(cdl.getCodice());
-            List<Lezione> elencoLezioni = myUniLesson.cercaLezioni(1);
+            myUniLesson.identificaDocente(d.getCodice());
+            List<Lezione> elencoLezioni = myUniLesson.cercaLezioni(20005);
 
             for (Lezione l1 : elencoLezioni) {
-                if (l1.getCodice() == 207465127) { //lezione che è presente nel sistema (vedi file Lezioni.txt)
+                if (l1.getCodice() == 207465137) { //lezione che è presente nel sistema (vedi file Lezioni.txt)
                     l = l1;
                     break;
                 }
@@ -251,7 +247,6 @@ public class TestMyUniLesson {
             List<Studente> elencoStudenti = myUniLesson.iniziaAppello(l.getCodice());
             for (Studente s : elencoStudenti) {
                 myUniLesson.inserisciPresenza(s, true);
-
             }
             myUniLesson.terminaAppello();
             assertNull(l.getElencoPartecipazioni());
@@ -276,7 +271,6 @@ public class TestMyUniLesson {
             List<Lezione> lez = myUniLesson.cercaProssimeLezioni(ins.getCodice());
             assertTrue(lez.contains(l));
 
-
         } catch (Exception e) {
             fail("error test");
         }
@@ -300,6 +294,9 @@ public class TestMyUniLesson {
 
             myUniLesson.identificaDocente(d.getCodice());
             List<Lezione> lez = myUniLesson.cercaProssimeLezioni(ins.getCodice());
+
+            Thread.sleep(5000); //Aspetto che finiscano i Threads
+
             assertFalse(lez.contains(l));
 
         } catch (Exception e) {
@@ -315,6 +312,3 @@ public class TestMyUniLesson {
         return calendar.getTime();
     }
 }
-
-
-

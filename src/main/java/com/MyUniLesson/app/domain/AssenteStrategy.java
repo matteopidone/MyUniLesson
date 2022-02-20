@@ -1,48 +1,36 @@
 package com.MyUniLesson.app.domain;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import java.util.Properties;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
-public class AssenteStrategy implements FormatoMail{
+public class AssenteStrategy implements FormatoMail {
+
+    Map<Integer, String> giorniSettimana = new HashMap<Integer, String>();
+
     @Override
-    public void inviaMail(Partecipazione p) throws MessagingException {
-        Properties properties = new Properties();
+    public void inviaMail(Partecipazione p) {
 
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true");
-        properties.put("mail.smtp.host", "smtp.gmail.com");
-        properties.put("mail.smtp.port", "587");
+        giorniSettimana.put(0, "Domenica");
+        giorniSettimana.put(1, "Lunedi");
+        giorniSettimana.put(2, "Martedi");
+        giorniSettimana.put(3, "Mercoledi");
+        giorniSettimana.put(4, "Giovedi");
+        giorniSettimana.put(5, "Venerdi");
+        giorniSettimana.put(6, "Sabato");
 
-        final String myAccount = "noreplymyunilesson@gmail.com";
-        final String psw = "S!P4cZf-6!CzeCe";
-
-        Session session = Session.getInstance(properties, new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(myAccount, psw);
-            }
-        });
-
+        String mail = p.getStudente().getEmail();
         String oggetto = "MyUniLesson: Comunicazione Lezione " + p.getLezione().getCodice();
-        String testo ="Nel giorno " + p.getLezione().getData() +
-                " sei risultato assente alla lezione di " + p.getLezione().getInsegnamento().getNome() +
-                " avente codice " + p.getLezione().getCodice() + "\n\nBuono Studio";
+        String testo = "Il giorno " + myData(p) + " sei risultato ASSENTE alla lezione ( Codice " + p.getLezione().getCodice() + " ) di " + p.getLezione().getInsegnamento().getNome() + "\n\nBuono Studio";
 
-        Message message = prepareMessage(session, myAccount, p.getStudente().getEmail(), oggetto, testo);
-
-        Transport.send(message);
-
+        Thread myThread = new MailThread(mail, oggetto, testo);
+        myThread.start();
     }
 
-    private Message prepareMessage(Session session, String myAccount, String recipient, String oggetto, String testo) throws MessagingException{
-        Message message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(myAccount));
-        message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
-        message.setSubject(oggetto);
-        message.setText(testo);
-        return message;
-
+    private String myData(Partecipazione p) {
+        Lezione l = p.getLezione();
+        return giorniSettimana.get(p.getLezione().getData().getDay()) + " - " + LocalDate.of(l.getData().getYear() + 1900, l.getData().getMonth() + 1, l.getData().getDate()).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "   " + LocalTime.of(l.getData().getHours(), l.getData().getMinutes()) + " - " + LocalTime.of(l.getData().getHours() + l.getDurata(), l.getData().getMinutes());
     }
 }

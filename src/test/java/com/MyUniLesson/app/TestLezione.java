@@ -9,20 +9,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.mail.MessagingException;
 import java.util.Date;
-
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestLezione {
 
-
     Insegnamento ins1;
     Date d = new Date();
     Lezione l1;
     Studente s1;
-
 
     @BeforeEach
     public void initTest() {
@@ -37,7 +33,6 @@ public class TestLezione {
         l1 = null;
         s1 = null;
     }
-
 
     //UC2 Test
     @Test
@@ -109,6 +104,9 @@ public class TestLezione {
             l1.aggiungiPartecipazione(s1.getMatricola());
             l1.creaElenchiAppello();
             l1.registraAssenza(s1.getMatricola(), p);
+
+            Thread.sleep(5000); //Aspetto che finiscano i Threads
+
             for (ComunicazioneLezione c : l1.getElencoComunicazioni()) {
                 if (c.getPartecipazione() == p) {
                     assertEquals(c.getFormato().getClass(), AssenteStrategy.class);
@@ -129,6 +127,9 @@ public class TestLezione {
             l1.aggiungiPartecipazione(s1.getMatricola());
 
             l1.comunicaAnnullamento();
+
+            Thread.sleep(5000); //Aspetto che finiscano i Threads
+
             for (ComunicazioneLezione c : l1.getElencoComunicazioni()) {
                 if (c.getPartecipazione() == p) {
                     assertEquals(c.getFormato().getClass(), AnnullamentoStrategy.class);

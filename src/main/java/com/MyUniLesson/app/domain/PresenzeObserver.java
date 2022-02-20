@@ -13,16 +13,12 @@ public class PresenzeObserver implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        Partecipazione p=(Partecipazione) o;
-        String matricola= p.getMatricolaStudente();
-        if(p.getStatoPartecipazione().getClass()==StatoPresente.class){
+        Partecipazione p = (Partecipazione) o;
+        String matricola = p.getMatricolaStudente();
+        if (p.getStatoPartecipazione().getClass() == StatoPresente.class) {
             lezione.registraPresenza(matricola, p);
-        }else if(p.getStatoPartecipazione().getClass()==StatoAssente.class){
-            try {
-                lezione.registraAssenza(matricola, p);
-            }catch (MessagingException e){
-                System.out.println("Mail non inviata  a " + p.getMatricolaStudente());
-            }
+        } else if (p.getStatoPartecipazione().getClass() == StatoAssente.class) {
+            lezione.registraAssenza(matricola, p);
         }
     }
 }

@@ -3,7 +3,6 @@ package com.MyUniLesson.app;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.MyUniLesson.app.domain.*;
-import com.MyUniLesson.app.exception.*;
 import org.junit.jupiter.api.*;
 
 public class TestStatoPartecipazione {

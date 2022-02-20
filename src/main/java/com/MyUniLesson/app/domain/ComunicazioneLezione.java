@@ -1,5 +1,7 @@
 package com.MyUniLesson.app.domain;
+
 import javax.mail.MessagingException;
+
 import static java.lang.Math.abs;
 
 public class ComunicazioneLezione {
@@ -13,9 +15,11 @@ public class ComunicazioneLezione {
 
     }
 
-    public void setFormatoMail(FormatoMail formato){ this.formato = formato; }
+    public void setFormatoMail(FormatoMail formato) {
+        this.formato = formato;
+    }
 
-    public void invia() throws MessagingException {
+    public void invia() {
         formato.inviaMail(partecipazione);
     }
 

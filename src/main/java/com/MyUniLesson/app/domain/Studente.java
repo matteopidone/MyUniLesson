@@ -23,6 +23,14 @@ public class Studente {
         return email;
     }
 
+    public String getNome() {
+        return nome;
+    }
+
+    public String getCognome() {
+        return cognome;
+    }
+
     @Override
     public String toString() {
         return "Studente{" +
