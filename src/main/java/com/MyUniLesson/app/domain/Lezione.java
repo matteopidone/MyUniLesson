@@ -24,7 +24,7 @@ public class Lezione implements Comparable<Lezione> {
     private Insegnamento insegnamento;
 
     public Lezione(Date data, int durata, Insegnamento insegnamento) {
-        this.codice = abs((int) System.currentTimeMillis());
+        this.codice = abs((int) System.currentTimeMillis()) + (int)(Math.random()*(10000));
         this.data = data;
         this.durata = durata;
         this.elencoPartecipazioni = new HashMap<String, Partecipazione>();
@@ -178,6 +178,7 @@ public class Lezione implements Comparable<Lezione> {
     public List<ComunicazioneLezione> getElencoComunicazioni() {
         return elencoComunicazioni;
     }
+
 
     public void setAppello(boolean appello) {
         this.appello = appello;

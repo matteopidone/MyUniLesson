@@ -10,7 +10,7 @@ public class ComunicazioneLezione {
     private Partecipazione partecipazione;
 
     public ComunicazioneLezione(Partecipazione partecipazione) {
-        this.codice = abs((int) System.currentTimeMillis());
+        this.codice = abs((int) System.currentTimeMillis()) + (int)(Math.random()*(10000));
         this.partecipazione = partecipazione;
 
     }

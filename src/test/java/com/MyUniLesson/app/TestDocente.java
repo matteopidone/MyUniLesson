@@ -35,4 +35,17 @@ public class TestDocente {
         }
     }
 
+    @Test
+    public void TestEsistenzaDocenti() {
+        try {
+            myUniLesson.identificaDocente(1); //docente che non esiste nel sistema
+            fail("Docente trovato.");
+        } catch (DocentiException m) {
+            assertNotNull(m);
+        } catch (Exception e) {
+            fail("Error Test");
+        }
+    }
+
+
 }

@@ -263,8 +263,8 @@ public class MyUniLesson {
         }
         lezioneSelezionata.creaElenchiAppello();
 
-        List<Studente> elencoStudenti =  lezioneSelezionata.cercaStudenti();
-        if(elencoStudenti.isEmpty()) {
+        List<Studente> elencoStudenti = lezioneSelezionata.cercaStudenti();
+        if (elencoStudenti.isEmpty()) {
             throw new StudenteException("Non ci sono studenti prenotati a questa Lezione");
         }
         return elencoStudenti;
@@ -294,5 +294,17 @@ public class MyUniLesson {
 
     public Map<Integer, CorsoDiLaurea> getElencoCdl() {
         return elencoCdl;
+    }
+
+    public CorsoDiLaurea getCdlSelezionato() {
+        return cdlSelezionato;
+    }
+
+    public Lezione getLezioneSelezionata() {
+        return lezioneSelezionata;
+    }
+
+    public Docente getDocenteSelezionato() {
+        return docenteSelezionato;
     }
 }
